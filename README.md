@@ -17,4 +17,4 @@
 
 | 資料夾 | 說明 |
 |--------|------|
-| [espanso-projects/](espanso-projects/) | 專案名稱快速輸入（Espanso text expander） |
+| [espanso/](espanso/) | 專案名稱快速輸入（Espanso text expander） |

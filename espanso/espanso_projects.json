@@ -1,0 +1,6 @@
+{
+  "scan_children": [
+    "trip-doc-generator/trips",
+    "tools"
+  ]
+}
