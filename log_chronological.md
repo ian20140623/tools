@@ -24,3 +24,12 @@
 - gen_espanso.py 同時寫入 Espanso yml 和無蝦米 liu.box，兩個輸入法模式都能快速輸入專案名
 - 撞名規則：各管各的（無蝦米保留手動中文條目，Espanso 全部生成）
 - liu.box 備份進 repo，與 Dropbox 雙向同步
+
+### 13:31 [NB] liu-updater：時間字根自動更新
+
+- 痛點：liu.box 裡的時間字根（年度、月份、季度）以前手動更新，放了四年沒改
+- 建立 liu-updater 工具，一鍵更新所有時間字根
+- 年度字根：LLY/LY/TY/NY/NNY（前年～後年）、TM（這個月）
+- 季度字根：EQ/RQ/SQ/FQ（嘸蝦米數字 E=1 R=2 S=3 F=4）、ERQ（上半年）、ESQ（前三季累計）、QARP（年報）
+- 臨近2季度原則：當季±1季年份明確，距離2季時 1Q↔3Q 明確、2Q↔4Q 模糊不帶年
+- 一次性清理：刪掉過時的 `TD; TD-SCDMA` 條目
