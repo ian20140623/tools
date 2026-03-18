@@ -33,3 +33,20 @@
 - 季度字根：EQ/RQ/SQ/FQ（嘸蝦米數字 E=1 R=2 S=3 F=4）、ERQ（上半年）、ESQ（前三季累計）、QARP（年報）
 - 臨近2季度原則：當季±1季年份明確，距離2季時 1Q↔3Q 明確、2Q↔4Q 模糊不帶年
 - 一次性清理：刪掉過時的 `TD; TD-SCDMA` 條目
+
+## 2026-03-18（三）
+
+### 12:00 [NB] liu-updater 季度更新
+
+- 手動跑 liu-updater，更新 liu.box 時間字根
+
+### 13:46 [NB] wifi-keepalive 開案：iPhone 熱點斷線自動重連
+
+- 痛點：iPhone 個人熱點連 NB，30-60 分鐘自動斷線（iOS 省電機制已知問題）
+- 方案討論：PowerShell vs Python → 選 PowerShell（零依賴、系統指令原生、不跨平台）
+- 建立 wifi-keepalive 工具：keep-alive ping + 斷線自動重連 + CSV log
+- 支援多 SSID（兩支 iPhone），斷線時優先重連最近用過的
+- 設定直接寫腳本頂部變數（最簡單），log 用 CSV（最精簡）
+- 實測發現問題：netsh 輸出 Unicode 右單引號（U+2019）被轉成 `?`，SSID 比對失敗
+- 嘗試 Get-NetConnectionProfile 可保留 Unicode，待下次 session 繼續修正
+- 建立 wifi-keepalive/ROADMAP.md：三階段（核心功能 → 穩定運行 → 觀察分析）
