@@ -39,3 +39,14 @@
 - **拿掉的規則**：首字母縮寫（`ks;`）、前 2 字母（`kn;`）、前 3 字母（`kno;`）全部移除，單字母更早就移除了
 - **結果**：78 → 21 個 trigger，每個專案一個，零撞名
 - **撞名規則不變**：如果前 4 字母撞到 liu.box 手動條目，liu.box 跳過、Espanso 照生成
+
+## 2026-03-20（五）
+
+### 21:58 [DESKTOP] liu.box 升為 single source of truth
+
+- **動機**：想要一個地方維護所有自訂字串，Espanso 和嘸蝦米同步更新
+- **做法**：gen_espanso.py 讀 liu.box 手動區 → 同時寫入 Espanso config（英數模式）和 liu.box 自動區（嘸蝦米模式）
+- **新增 parse_liu_entries()**：從 liu.box 行列表解析 key-value，供 generate_espanso() 使用
+- **generate_espanso() 改版**：先寫 liu.box 手動條目（579 筆），再寫專案 trigger（24 筆），手動優先撞名跳過
+- **generate_liu() 簡化**：手動條目讀取和 key 收集移到 generate() 統一處理
+- **結果**：603 triggers 生成（579 liu.box + 24 專案），0 衝突

@@ -50,3 +50,12 @@
 - 實測發現問題：netsh 輸出 Unicode 右單引號（U+2019）被轉成 `?`，SSID 比對失敗
 - 嘗試 Get-NetConnectionProfile 可保留 Unicode，待下次 session 繼續修正
 - 建立 wifi-keepalive/ROADMAP.md：三階段（核心功能 → 穩定運行 → 觀察分析）
+
+## 2026-03-20（五）
+
+### 21:58 [DESKTOP] espanso：liu.box 升為 single source of truth
+
+- liu.box 手動區現在是 Espanso 和嘸蝦米的共用字串來源
+- gen_espanso.py 讀 liu.box 手動條目 → 同時寫入 Espanso config 和 liu.box 自動區
+- 以後只要改 liu.box 手動區，跑一次 gen_espanso.py 兩邊都更新
+- 579 筆手動條目 + 24 筆專案 trigger，0 衝突

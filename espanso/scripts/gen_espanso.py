@@ -1,9 +1,10 @@
 """
 掃描 ClaudeProjects/ 資料夾，自動生成：
-  1. Espanso trigger config（英數模式）
+  1. Espanso trigger config（英數模式）— liu.box 手動條目 + 專案名
   2. 無蝦米 liu.box 專案條目（中文輸入法模式）
 
-兩邊用同一套字根 + ; 觸發，不管輸入法狀態都能用。
+liu.box 手動區是 single source of truth。
+改 liu.box → 跑 gen_espanso.py → 兩邊都更新。
 
 用法：python gen_espanso.py
 """
@@ -87,28 +88,6 @@ def build_trigger_map(projects):
     return trigger_map
 
 
-def generate_espanso(trigger_map, projects):
-    """生成 Espanso YAML config"""
-    matches = []
-    for trigger, names in sorted(trigger_map.items()):
-        if len(names) == 1:
-            matches.append({"trigger": trigger, "replace": names[0]})
-        else:
-            choices = [{"label": n, "id": n} for n in names]
-            matches.append({
-                "trigger": trigger,
-                "replace": "{{choice}}",
-                "vars": [{"name": "choice", "type": "choice", "params": {"values": choices}}],
-            })
-
-    config = {"matches": matches}
-    out_path = ESPANSO_MATCH / "claude_projects.yml"
-    out_path.write_text(yaml.dump(config, allow_unicode=True, default_flow_style=False), encoding="utf-8")
-
-    print(f"[Espanso] Generated {len(matches)} triggers for {len(projects)} projects → {out_path}")
-    return matches
-
-
 def read_liu_box(path):
     """讀取 liu.box，回傳 (手動條目行list, 自動條目行list)"""
     if not path.exists():
@@ -137,6 +116,16 @@ def read_liu_box(path):
     return manual, auto
 
 
+def parse_liu_entries(lines):
+    """從 liu.box 行列表解析出 [(key, value), ...]"""
+    entries = []
+    for line in lines:
+        if "; " in line:
+            key, value = line.split("; ", 1)
+            entries.append((key.strip(), value.strip()))
+    return entries
+
+
 def write_liu_box(path, manual_lines, auto_lines):
     """寫入 liu.box（UTF-16LE + BOM + CRLF）"""
     all_lines = manual_lines + [LIU_MARKER] + auto_lines
@@ -147,20 +136,44 @@ def write_liu_box(path, manual_lines, auto_lines):
     path.write_bytes(data)
 
 
-def generate_liu(trigger_map, projects):
-    """生成無蝦米 liu.box 的專案條目，同時寫入 Dropbox 和 repo 備份"""
-    # 讀取現有手動條目（從 Dropbox 讀，它有最新的手動修改）
-    source = LIU_DROPBOX if LIU_DROPBOX.exists() else LIU_BACKUP
-    manual_lines, _ = read_liu_box(source)
+def generate_espanso(trigger_map, manual_entries):
+    """生成 Espanso YAML config（liu.box 手動條目 + 專案 trigger）"""
+    matches = []
 
-    # 收集手動條目的 key，避免自動條目覆蓋
+    # liu.box 手動條目 → espanso trigger（key; 觸發）
     manual_keys = set()
-    for line in manual_lines:
-        if "; " in line:
-            key = line.split("; ", 1)[0].strip()
-            manual_keys.add(key)
+    for key, value in manual_entries:
+        trigger = f"{key.lower()};"
+        matches.append({"trigger": trigger, "replace": value})
+        manual_keys.add(key.lower())
 
-    # 生成專案條目（只有無衝突的，有衝突的在無蝦米裡沒有 choice 機制，跳過）
+    # 專案 triggers（手動條目優先，撞名跳過）
+    project_count = 0
+    for trigger, names in sorted(trigger_map.items()):
+        if trigger.rstrip(";") in manual_keys:
+            continue
+        if len(names) == 1:
+            matches.append({"trigger": trigger, "replace": names[0]})
+        else:
+            choices = [{"label": n, "id": n} for n in names]
+            matches.append({
+                "trigger": trigger,
+                "replace": "{{choice}}",
+                "vars": [{"name": "choice", "type": "choice", "params": {"values": choices}}],
+            })
+        project_count += 1
+
+    config = {"matches": matches}
+    out_path = ESPANSO_MATCH / "claude_projects.yml"
+    out_path.write_text(yaml.dump(config, allow_unicode=True, default_flow_style=False), encoding="utf-8")
+
+    print(f"[Espanso] Generated {len(matches)} triggers ({len(manual_entries)} liu.box + {project_count} projects) → {out_path}")
+    return matches
+
+
+def generate_liu(trigger_map, manual_lines, manual_keys):
+    """生成無蝦米 liu.box 的專案條目，同時寫入 Dropbox 和 repo 備份"""
+    # 生成專案條目（手動條目優先，撞名跳過）
     auto_lines = []
     skipped = []
     for trigger, names in sorted(trigger_map.items()):
@@ -170,8 +183,6 @@ def generate_liu(trigger_map, projects):
             continue
         if len(names) == 1:
             auto_lines.append(f"{key}; {names[0]}")
-        # 無蝦米不支援 choice，多個專案撞名時跳過
-        # （用戶可以手動在 liu.box 選一個加進去）
 
     # 寫入 Dropbox
     if LIU_DROPBOX.exists():
@@ -193,14 +204,21 @@ def generate():
     projects = get_projects()
     trigger_map = build_trigger_map(projects)
 
-    # Espanso
-    generate_espanso(trigger_map, projects)
+    # 讀 liu.box 手動條目（Dropbox 優先，有最新的手動修改）
+    source = LIU_DROPBOX if LIU_DROPBOX.exists() else LIU_BACKUP
+    manual_lines, _ = read_liu_box(source)
+    manual_entries = parse_liu_entries(manual_lines)
+    manual_keys = {k for k, _ in manual_entries}
 
-    # 無蝦米 liu.box
-    generate_liu(trigger_map, projects)
+    # Espanso（手動條目 + 專案）
+    generate_espanso(trigger_map, manual_entries)
+
+    # 無蝦米 liu.box（手動條目不動，加專案自動條目）
+    generate_liu(trigger_map, manual_lines, manual_keys)
 
     # 印出 trigger 對照表
-    print()
+    print(f"\n--- liu.box 手動條目: {len(manual_entries)} 筆 ---")
+    print(f"--- 專案 triggers ---")
     for trigger, names in sorted(trigger_map.items()):
         if len(names) == 1:
             print(f"  {trigger:12s} → {names[0]}")

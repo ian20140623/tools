@@ -20,7 +20,7 @@
 
 *還在想的工具點子，經過討論後移入階段目標。*
 
-- **單一來源架構** — 新專案名直接寫進 liu.box 當 source of truth，Espanso yml 從 liu.box 轉出。撞名時通知 Ian 並在 liu.box 下方註記，不加新快鍵不干擾原有條目
+- ~~**單一來源架構**~~ — ✅ 已完成（2026-03-20）。liu.box 手動區是 single source of truth，gen_espanso.py 同時寫 Espanso config 和 liu.box
 - **Espanso + liu.box 同步腳本** — 自動化 Dropbox ↔ repo 備份流程，手動改 liu.box 後一鍵同步回 repo
 
 ## 現況
