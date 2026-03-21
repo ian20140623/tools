@@ -50,3 +50,9 @@
 - **generate_espanso() 改版**：先寫 liu.box 手動條目（579 筆），再寫專案 trigger（24 筆），手動優先撞名跳過
 - **generate_liu() 簡化**：手動條目讀取和 key 收集移到 generate() 統一處理
 - **結果**：603 triggers 生成（579 liu.box + 24 專案），0 衝突
+
+### 15:22 [DESKTOP] Dropbox 路徑改環境變數
+
+- **問題**：DESKTOP Dropbox 在 `D:\Dropbox`，NB 在 `%USERPROFILE%\Dropbox`，寫死路徑只能在一台跑
+- **解法**：改用 `DROPBOX_PATH` 環境變數，沒設時 fallback 讀 repo 備份
+- **首筆共用字串**：加入 `OBS; Obsidian` 到 liu.box，兩邊都生效

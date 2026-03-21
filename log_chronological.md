@@ -59,3 +59,12 @@
 - gen_espanso.py 讀 liu.box 手動條目 → 同時寫入 Espanso config 和 liu.box 自動區
 - 以後只要改 liu.box 手動區，跑一次 gen_espanso.py 兩邊都更新
 - 579 筆手動條目 + 24 筆專案 trigger，0 衝突
+
+## 2026-03-21（六）
+
+### 15:22 [DESKTOP] Dropbox 路徑改環境變數 + 首筆共用字串測試
+
+- DESKTOP 的 Dropbox 在 D:\Dropbox，NB 在 %USERPROFILE%\Dropbox，寫死路徑會壞
+- gen_espanso.py 改用 DROPBOX_PATH 環境變數，沒設時 fallback 讀 repo 備份
+- DESKTOP 已設 `setx DROPBOX_PATH "D:\Dropbox"`，NB 待設
+- 首筆共用字串測試：加入 OBS; Obsidian，確認嘸蝦米和 Espanso 兩邊都生效

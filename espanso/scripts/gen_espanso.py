@@ -19,8 +19,9 @@ PROJECTS_DIR = Path(__file__).resolve().parent.parent.parent.parent  # ClaudePro
 ESPANSO_MATCH = Path(os.environ["APPDATA"]) / "espanso" / "match"
 CONFIG_FILE = Path(__file__).resolve().parent.parent / "espanso_projects.json"
 
-# liu.box 路徑
-LIU_DROPBOX = Path(os.environ["USERPROFILE"]) / "Dropbox" / "設定檔" / "liu.box"
+# liu.box 路徑（DROPBOX_PATH 環境變數指向 Dropbox 根目錄）
+_DROPBOX_DIR = Path(os.environ["DROPBOX_PATH"]) if "DROPBOX_PATH" in os.environ else None
+LIU_DROPBOX = _DROPBOX_DIR / "設定檔" / "liu.box" if _DROPBOX_DIR else None
 LIU_BACKUP = Path(__file__).resolve().parent.parent / "liu.box"
 
 # 自動生成區的 marker（liu.box 裡用這行標記自動生成的開始）
@@ -185,7 +186,7 @@ def generate_liu(trigger_map, manual_lines, manual_keys):
             auto_lines.append(f"{key}; {names[0]}")
 
     # 寫入 Dropbox
-    if LIU_DROPBOX.exists():
+    if LIU_DROPBOX and LIU_DROPBOX.exists():
         write_liu_box(LIU_DROPBOX, manual_lines, auto_lines)
         print(f"[liu.box] Updated Dropbox: {LIU_DROPBOX}")
 
@@ -205,7 +206,7 @@ def generate():
     trigger_map = build_trigger_map(projects)
 
     # 讀 liu.box 手動條目（Dropbox 優先，有最新的手動修改）
-    source = LIU_DROPBOX if LIU_DROPBOX.exists() else LIU_BACKUP
+    source = LIU_DROPBOX if (LIU_DROPBOX and LIU_DROPBOX.exists()) else LIU_BACKUP
     manual_lines, _ = read_liu_box(source)
     manual_entries = parse_liu_entries(manual_lines)
     manual_keys = {k for k, _ in manual_entries}
