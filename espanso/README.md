@@ -19,17 +19,15 @@
 - 數字開頭的名稱會跳過數字(`2026-disneysea` → `disn;`)
 - 一律 4 字母，避免短 key 干擾無蝦米正常輸入
 
-### liu.box = Single Source of Truth
+### 分工：espanso 管專案名，嘸蝦米管自訂字串
 
-liu.box 手動區是所有自訂字串的唯一來源。`gen_espanso.py` 讀取後同時寫入：
+兩者同時監聽鍵盤，重疊的 trigger 會打架（吃字、短 key 搶先觸發），所以各管各的：
 
-1. **Espanso config**(`%APPDATA%/espanso/match/claude_projects.yml`) — 英數模式，手動條目 + 專案 trigger
-2. **無蝦米 liu.box**(`Dropbox/設定檔/liu.box`) — 中文輸入法模式，手動條目不動，末尾加專案 trigger
-
-改 liu.box 手動區 → 跑 `gen_espanso.py` → 兩邊都更新。
+1. **Espanso config**(`%APPDATA%/espanso/match/claude_projects.yml`) — 英數模式，只寫專案 trigger
+2. **無蝦米 liu.box**(`Dropbox/設定檔/liu.box`) — 中文輸入法模式，手動條目 + 專案 trigger
 
 **撞名規則：手動條目優先**
-- 專案 trigger 和手動條目撞名時，兩邊都以手動條目為準，專案 trigger 跳過
+- 專案 trigger 和 liu.box 手動條目撞名時跳過，兩邊都不寫
 
 ### 子專案
 

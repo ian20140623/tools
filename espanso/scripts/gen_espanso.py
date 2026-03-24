@@ -1,10 +1,10 @@
 """
 掃描 ClaudeProjects/ 資料夾，自動生成：
-  1. Espanso trigger config（英數模式）— liu.box 手動條目 + 專案名
+  1. Espanso trigger config（英數模式）— 只寫專案名 trigger
   2. 無蝦米 liu.box 專案條目（中文輸入法模式）
 
-liu.box 手動區是 single source of truth。
-改 liu.box → 跑 gen_espanso.py → 兩邊都更新。
+分工：espanso 只管專案名，手動條目由嘸蝦米 liu.box 處理。
+兩邊不重疊，避免同時觸發打架。
 
 用法：python gen_espanso.py
 """
@@ -137,20 +137,12 @@ def write_liu_box(path, manual_lines, auto_lines):
     path.write_bytes(data)
 
 
-def generate_espanso(trigger_map, manual_entries):
-    """生成 Espanso YAML config（liu.box 手動條目 + 專案 trigger）"""
+def generate_espanso(trigger_map, manual_keys):
+    """生成 Espanso YAML config（只寫專案 trigger，手動條目留給嘸蝦米）"""
     matches = []
 
-    # liu.box 手動條目 → espanso trigger（key; 觸發）
-    manual_keys = set()
-    for key, value in manual_entries:
-        trigger = f"{key.lower()};"
-        matches.append({"trigger": trigger, "replace": value})
-        manual_keys.add(key.lower())
-
-    # 專案 triggers（手動條目優先，撞名跳過）
-    project_count = 0
     for trigger, names in sorted(trigger_map.items()):
+        # 手動條目優先，撞名跳過
         if trigger.rstrip(";") in manual_keys:
             continue
         if len(names) == 1:
@@ -162,13 +154,12 @@ def generate_espanso(trigger_map, manual_entries):
                 "replace": "{{choice}}",
                 "vars": [{"name": "choice", "type": "choice", "params": {"values": choices}}],
             })
-        project_count += 1
 
     config = {"matches": matches}
     out_path = ESPANSO_MATCH / "claude_projects.yml"
     out_path.write_text(yaml.dump(config, allow_unicode=True, default_flow_style=False), encoding="utf-8")
 
-    print(f"[Espanso] Generated {len(matches)} triggers ({len(manual_entries)} liu.box + {project_count} projects) → {out_path}")
+    print(f"[Espanso] Generated {len(matches)} project triggers → {out_path}")
     return matches
 
 
@@ -211,15 +202,14 @@ def generate():
     manual_entries = parse_liu_entries(manual_lines)
     manual_keys = {k for k, _ in manual_entries}
 
-    # Espanso（手動條目 + 專案）
-    generate_espanso(trigger_map, manual_entries)
+    # Espanso（只寫專案 trigger）
+    generate_espanso(trigger_map, manual_keys)
 
     # 無蝦米 liu.box（手動條目不動，加專案自動條目）
     generate_liu(trigger_map, manual_lines, manual_keys)
 
     # 印出 trigger 對照表
-    print(f"\n--- liu.box 手動條目: {len(manual_entries)} 筆 ---")
-    print(f"--- 專案 triggers ---")
+    print(f"\n--- 專案 triggers ---")
     for trigger, names in sorted(trigger_map.items()):
         if len(names) == 1:
             print(f"  {trigger:12s} → {names[0]}")

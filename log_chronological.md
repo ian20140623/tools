@@ -68,3 +68,12 @@
 - gen_espanso.py 改用 DROPBOX_PATH 環境變數，沒設時 fallback 讀 repo 備份
 - DESKTOP 已設 `setx DROPBOX_PATH "D:\Dropbox"`，NB 待設
 - 首筆共用字串測試：加入 OBS; Obsidian，確認嘸蝦米和 Espanso 兩邊都生效
+
+## 2026-03-25（二）
+
+### 05:50 [DESKTOP] espanso 與嘸蝦米分工：各管各的
+
+- 發現 espanso 和嘸蝦米同時監聽鍵盤會打架：短 key（如 `i;`）搶先觸發、`word: true` 會吃字
+- 嘗試過 `word: true`（吃字）、IME 偵測自動切換（防毒擋 C# interop）、最低長度門檻（workaround）
+- 最終決策：espanso 只管專案 trigger，手動條目留給嘸蝦米，兩邊不重疊
+- 關閉 espanso 的 Alt+Space 搜尋快捷鍵（default.yml 加 `search_shortcut: "off"`）
