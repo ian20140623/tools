@@ -77,3 +77,13 @@
 - 嘗試過 `word: true`（吃字）、IME 偵測自動切換（防毒擋 C# interop）、最低長度門檻（workaround）
 - 最終決策：espanso 只管專案 trigger，手動條目留給嘸蝦米，兩邊不重疊
 - 關閉 espanso 的 Alt+Space 搜尋快捷鍵（default.yml 加 `search_shortcut: "off"`）
+
+### 22:38 [DESKTOP] 停用 espanso，trigger 全部交給嘸蝦米
+
+- espanso 和嘸蝦米兩套 low-level keyboard hook 並存，疑似造成系統不穩（視窗高速閃爍、無法操作、只能重開機）
+- 問題在裝 espanso 之後才出現，重開機後仍會復發（espanso 有開機自啟）
+- 決策：停用 espanso，所有 trigger 統一由嘸蝦米 liu.box 處理（ZZAUTO 區已有 26 個專案 trigger）
+- 做了什麼：
+  - 停止 espanso 服務
+  - 刪除 Startup 資料夾的 espanso.lnk（不再開機自啟）
+  - gen_espanso.py 移除 espanso 產出邏輯（generate_espanso()、import yaml、ESPANSO_MATCH），只更新 liu.box

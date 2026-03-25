@@ -1,10 +1,8 @@
 """
-掃描 ClaudeProjects/ 資料夾，自動生成：
-  1. Espanso trigger config（英數模式）— 只寫專案名 trigger
-  2. 無蝦米 liu.box 專案條目（中文輸入法模式）
+掃描 ClaudeProjects/ 資料夾，自動生成無蝦米 liu.box 專案條目。
 
-分工：espanso 只管專案名，手動條目由嘸蝦米 liu.box 處理。
-兩邊不重疊，避免同時觸發打架。
+liu.box 手動區是 single source of truth，本腳本只更新自動區（ZZAUTO 以下）。
+Espanso 已停用（與嘸蝦米鍵盤 hook 衝突），所有 trigger 統一由嘸蝦米處理。
 
 用法：python gen_espanso.py
 """
@@ -12,11 +10,9 @@
 import json
 import os
 import re
-import yaml
 from pathlib import Path
 
 PROJECTS_DIR = Path(__file__).resolve().parent.parent.parent.parent  # ClaudeProjects/
-ESPANSO_MATCH = Path(os.environ["APPDATA"]) / "espanso" / "match"
 CONFIG_FILE = Path(__file__).resolve().parent.parent / "espanso_projects.json"
 
 # liu.box 路徑（DROPBOX_PATH 環境變數指向 Dropbox 根目錄）
@@ -137,32 +133,6 @@ def write_liu_box(path, manual_lines, auto_lines):
     path.write_bytes(data)
 
 
-def generate_espanso(trigger_map, manual_keys):
-    """生成 Espanso YAML config（只寫專案 trigger，手動條目留給嘸蝦米）"""
-    matches = []
-
-    for trigger, names in sorted(trigger_map.items()):
-        # 手動條目優先，撞名跳過
-        if trigger.rstrip(";") in manual_keys:
-            continue
-        if len(names) == 1:
-            matches.append({"trigger": trigger, "replace": names[0]})
-        else:
-            choices = [{"label": n, "id": n} for n in names]
-            matches.append({
-                "trigger": trigger,
-                "replace": "{{choice}}",
-                "vars": [{"name": "choice", "type": "choice", "params": {"values": choices}}],
-            })
-
-    config = {"matches": matches}
-    out_path = ESPANSO_MATCH / "claude_projects.yml"
-    out_path.write_text(yaml.dump(config, allow_unicode=True, default_flow_style=False), encoding="utf-8")
-
-    print(f"[Espanso] Generated {len(matches)} project triggers → {out_path}")
-    return matches
-
-
 def generate_liu(trigger_map, manual_lines, manual_keys):
     """生成無蝦米 liu.box 的專案條目，同時寫入 Dropbox 和 repo 備份"""
     # 生成專案條目（手動條目優先，撞名跳過）
@@ -201,9 +171,6 @@ def generate():
     manual_lines, _ = read_liu_box(source)
     manual_entries = parse_liu_entries(manual_lines)
     manual_keys = {k for k, _ in manual_entries}
-
-    # Espanso（只寫專案 trigger）
-    generate_espanso(trigger_map, manual_keys)
 
     # 無蝦米 liu.box（手動條目不動，加專案自動條目）
     generate_liu(trigger_map, manual_lines, manual_keys)

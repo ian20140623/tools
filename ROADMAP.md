@@ -12,7 +12,7 @@
 
 ## 階段目標
 
-- [x] A. espanso — 專案名稱快速輸入（雙輸入法同步：Espanso + 無蝦米 liu.box）
+- [x] A. espanso — 專案名稱快速輸入（統一由嘸蝦米 liu.box 處理，Espanso 已停用）
 - [x] B. liu-updater — liu.box 時間字根自動更新（年度 + 季度，臨近2季度原則）
 - [ ] C. wifi-keepalive — iPhone 熱點 keep-alive + 斷線自動重連（PowerShell，僅 NB）
 
