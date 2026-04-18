@@ -1,0 +1,595 @@
+[
+  {
+    "hanzi": "生命",
+    "category": "nng-word",
+    "accepted": [
+      "shengming",
+      "sm"
+    ],
+    "preferred": "shengming",
+    "trap": [
+      "shenming",
+      "shengmin",
+      "shenmin"
+    ],
+    "tags": [
+      "shen-sheng",
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "深圳",
+    "category": "nng-word",
+    "accepted": [
+      "shenzhen",
+      "sz"
+    ],
+    "preferred": "shenzhen",
+    "trap": [
+      "shengzhen",
+      "shenzheng",
+      "shengzheng"
+    ],
+    "tags": [
+      "shen-sheng",
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "新聞",
+    "category": "nng-word",
+    "accepted": [
+      "xinwen",
+      "xw"
+    ],
+    "preferred": "xinwen",
+    "trap": [
+      "xingwen",
+      "xinweng",
+      "xingweng"
+    ],
+    "tags": [
+      "xin-xing",
+      "wen-weng"
+    ]
+  },
+  {
+    "hanzi": "興奮",
+    "category": "nng-word",
+    "accepted": [
+      "xingfen",
+      "xf"
+    ],
+    "preferred": "xingfen",
+    "trap": [
+      "xinfen",
+      "xingfeng",
+      "xinfeng"
+    ],
+    "tags": [
+      "xin-xing",
+      "fen-feng"
+    ]
+  },
+  {
+    "hanzi": "平靜",
+    "category": "nng-word",
+    "accepted": [
+      "pingjing",
+      "pj"
+    ],
+    "preferred": "pingjing",
+    "trap": [
+      "pinjing",
+      "pingjin",
+      "pinjin"
+    ],
+    "tags": [
+      "pin-ping",
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "命運",
+    "category": "nng-word",
+    "accepted": [
+      "mingyun",
+      "my"
+    ],
+    "preferred": "mingyun",
+    "trap": [
+      "minyun"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "真心",
+    "category": "nng-word",
+    "accepted": [
+      "zhenxin",
+      "zx"
+    ],
+    "preferred": "zhenxin",
+    "trap": [
+      "zhengxin",
+      "zhenxing",
+      "zhengxing"
+    ],
+    "tags": [
+      "zhen-zheng",
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "真相",
+    "category": "nng-word",
+    "accepted": [
+      "zhenxiang",
+      "zx"
+    ],
+    "preferred": "zhenxiang",
+    "trap": [
+      "zhengxiang"
+    ],
+    "tags": [
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "心情",
+    "category": "nng-word",
+    "accepted": [
+      "xinqing",
+      "xq"
+    ],
+    "preferred": "xinqing",
+    "trap": [
+      "xingqing",
+      "xinqin",
+      "xingqin"
+    ],
+    "tags": [
+      "xin-xing",
+      "qin-qing"
+    ]
+  },
+  {
+    "hanzi": "成分",
+    "category": "nng-word",
+    "accepted": [
+      "chengfen",
+      "cf"
+    ],
+    "preferred": "chengfen",
+    "trap": [
+      "chenfen",
+      "chengfeng",
+      "chenfeng"
+    ],
+    "tags": [
+      "chen-cheng",
+      "fen-feng"
+    ]
+  },
+  {
+    "hanzi": "成績",
+    "category": "nng-word",
+    "accepted": [
+      "chengji",
+      "cj"
+    ],
+    "preferred": "chengji",
+    "trap": [
+      "chenji"
+    ],
+    "tags": [
+      "chen-cheng"
+    ]
+  },
+  {
+    "hanzi": "民生",
+    "category": "nng-word",
+    "accepted": [
+      "minsheng",
+      "ms"
+    ],
+    "preferred": "minsheng",
+    "trap": [
+      "mingsheng",
+      "minshen",
+      "mingshen"
+    ],
+    "tags": [
+      "min-ming",
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "人生",
+    "category": "nng-word",
+    "accepted": [
+      "rensheng",
+      "rs"
+    ],
+    "preferred": "rensheng",
+    "trap": [
+      "rengsheng",
+      "renshen",
+      "rengshen"
+    ],
+    "tags": [
+      "ren-reng",
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "身分",
+    "category": "nng-word",
+    "accepted": [
+      "shenfen",
+      "sf"
+    ],
+    "preferred": "shenfen",
+    "trap": [
+      "shengfen",
+      "shenfeng",
+      "shengfeng"
+    ],
+    "tags": [
+      "shen-sheng",
+      "fen-feng"
+    ]
+  },
+  {
+    "hanzi": "本身",
+    "category": "nng-word",
+    "accepted": [
+      "benshen",
+      "bs"
+    ],
+    "preferred": "benshen",
+    "trap": [
+      "bengshen",
+      "bensheng",
+      "bengsheng"
+    ],
+    "tags": [
+      "ben-beng",
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "風景",
+    "category": "nng-word",
+    "accepted": [
+      "fengjing",
+      "fj"
+    ],
+    "preferred": "fengjing",
+    "trap": [
+      "fenjing",
+      "fengjin",
+      "fenjin"
+    ],
+    "tags": [
+      "fen-feng",
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "影響",
+    "category": "nng-word",
+    "accepted": [
+      "yingxiang",
+      "yx"
+    ],
+    "preferred": "yingxiang",
+    "trap": [
+      "yinxiang"
+    ],
+    "tags": [
+      "yin-ying"
+    ]
+  },
+  {
+    "hanzi": "進行",
+    "category": "nng-word",
+    "accepted": [
+      "jinxing",
+      "jx"
+    ],
+    "preferred": "jinxing",
+    "trap": [
+      "jingxing",
+      "jinxin",
+      "jingxin"
+    ],
+    "tags": [
+      "jin-jing",
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "英文",
+    "category": "nng-word",
+    "accepted": [
+      "yingwen",
+      "yw"
+    ],
+    "preferred": "yingwen",
+    "trap": [
+      "yinwen",
+      "yingweng",
+      "yinweng"
+    ],
+    "tags": [
+      "yin-ying",
+      "wen-weng"
+    ]
+  },
+  {
+    "hanzi": "明白",
+    "category": "nng-word",
+    "accepted": [
+      "mingbai",
+      "mb"
+    ],
+    "preferred": "mingbai",
+    "trap": [
+      "minbai"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "精神",
+    "category": "nng-word",
+    "accepted": [
+      "jingshen",
+      "js"
+    ],
+    "preferred": "jingshen",
+    "trap": [
+      "jinshen",
+      "jingsheng",
+      "jinsheng"
+    ],
+    "tags": [
+      "jin-jing",
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "安寧",
+    "category": "nng-word",
+    "accepted": [
+      "anning"
+    ],
+    "preferred": "anning",
+    "trap": [
+      "angning",
+      "annin",
+      "angnin"
+    ],
+    "tags": [
+      "an-ang",
+      "nin-ning"
+    ]
+  },
+  {
+    "hanzi": "平安",
+    "category": "nng-word",
+    "accepted": [
+      "pingan",
+      "ping'an"
+    ],
+    "preferred": "ping'an",
+    "trap": [
+      "pinan",
+      "pinang",
+      "pingang"
+    ],
+    "tags": [
+      "pin-ping",
+      "an-ang",
+      "vowel-2nd-a"
+    ]
+  },
+  {
+    "hanzi": "金融",
+    "category": "nng-word",
+    "accepted": [
+      "jinrong",
+      "jr"
+    ],
+    "preferred": "jinrong",
+    "trap": [
+      "jingrong"
+    ],
+    "tags": [
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "政府",
+    "category": "nng-word",
+    "accepted": [
+      "zhengfu",
+      "zf"
+    ],
+    "preferred": "zhengfu",
+    "trap": [
+      "zhenfu"
+    ],
+    "tags": [
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "朋友",
+    "category": "nng-word",
+    "accepted": [
+      "pengyou",
+      "py"
+    ],
+    "preferred": "pengyou",
+    "trap": [
+      "penyou"
+    ],
+    "tags": [
+      "pen-peng"
+    ]
+  },
+  {
+    "hanzi": "產品",
+    "category": "nng-word",
+    "accepted": [
+      "chanpin",
+      "cp"
+    ],
+    "preferred": "chanpin",
+    "trap": [
+      "changpin",
+      "chanping",
+      "changping"
+    ],
+    "tags": [
+      "chan-chang",
+      "pin-ping"
+    ]
+  },
+  {
+    "hanzi": "長城",
+    "category": "nng-word",
+    "accepted": [
+      "changcheng",
+      "cc"
+    ],
+    "preferred": "changcheng",
+    "trap": [
+      "chancheng",
+      "changchen",
+      "chanchen"
+    ],
+    "tags": [
+      "chan-chang",
+      "chen-cheng"
+    ]
+  },
+  {
+    "hanzi": "方向",
+    "category": "nng-word",
+    "accepted": [
+      "fangxiang",
+      "fx"
+    ],
+    "preferred": "fangxiang",
+    "trap": [
+      "fanxiang"
+    ],
+    "tags": [
+      "fan-fang"
+    ]
+  },
+  {
+    "hanzi": "經濟",
+    "category": "nng-word",
+    "accepted": [
+      "jingji",
+      "jj"
+    ],
+    "preferred": "jingji",
+    "trap": [
+      "jinji"
+    ],
+    "tags": [
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "想念",
+    "category": "nng-word",
+    "accepted": [
+      "xiangnian",
+      "xn"
+    ],
+    "preferred": "xiangnian",
+    "trap": [
+      "xiannian"
+    ],
+    "tags": [
+      "xian-xiang"
+    ]
+  },
+  {
+    "hanzi": "重新",
+    "category": "nng-word",
+    "accepted": [
+      "chongxin",
+      "cx"
+    ],
+    "preferred": "chongxin",
+    "trap": [
+      "chonxin",
+      "chongxing",
+      "chonxing"
+    ],
+    "tags": [
+      "chon-chong",
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "反應",
+    "category": "nng-word",
+    "accepted": [
+      "fanying",
+      "fy"
+    ],
+    "preferred": "fanying",
+    "trap": [
+      "fangying",
+      "fanyin",
+      "fangyin"
+    ],
+    "tags": [
+      "fan-fang",
+      "yin-ying"
+    ]
+  },
+  {
+    "hanzi": "清楚",
+    "category": "nng-word",
+    "accepted": [
+      "qingchu",
+      "qc"
+    ],
+    "preferred": "qingchu",
+    "trap": [
+      "qinchu"
+    ],
+    "tags": [
+      "qin-qing"
+    ]
+  },
+  {
+    "hanzi": "信心",
+    "category": "nng-word",
+    "accepted": [
+      "xinxin",
+      "xx"
+    ],
+    "preferred": "xinxin",
+    "trap": [
+      "xingxin",
+      "xinxing",
+      "xingxing"
+    ],
+    "tags": [
+      "xin-xing"
+    ]
+  }
+]

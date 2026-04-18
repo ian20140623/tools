@@ -20,3 +20,4 @@
 | [espanso/](espanso/) | 專案名稱快速輸入（Espanso + 無蝦米雙輸入法同步） |
 | [liu-updater/](liu-updater/) | liu.box 時間字根自動更新（年度 + 季度） |
 | [wifi-keepalive/](wifi-keepalive/) | iPhone 熱點 keep-alive + 斷線自動重連（PowerShell） |
+| [pinyin-drill/](pinyin-drill/) | Mac 拼音練習遊戲（apostrophe 反射 + n/ng 辨識，弱點自動加強） |

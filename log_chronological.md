@@ -87,3 +87,36 @@
   - 停止 espanso 服務
   - 刪除 Startup 資料夾的 espanso.lnk（不再開機自啟）
   - gen_espanso.py 移除 espanso 產出邏輯（generate_espanso()、import yaml、ESPANSO_MATCH），只更新 liu.box
+
+## 2026-04-18（六）
+
+### 19:15 [MAC-MINI] pinyin-drill v0.1.0 開案（階段目標 D）
+
+**痛點**：Mac 原生拼音日常可用，但兩類場景卡：
+1. 簡拼遇第二字裸母音（方案 fang-an）要用 apostrophe `f'an`，否則 `fa` 被解成單音節
+2. n/ng 前後鼻音（台灣口音盲點），生/深、京/金常誤判
+
+**設計決策**：
+- 純英文輸入 + 字串比對（遊戲本身不碰 IME；練習前切 ABC 輸入法）
+- accepted 清單以「Mac IME 真能出字」為準（curated 非規則推導）
+- 時間當弱點訊號（對但慢 →×1.5 加權，錯 ×2，連續快對 ×0.7 淡出）
+- 三類題庫分檔：apostrophe 詞、n/ng 字、n/ng 詞
+
+**產出**：
+- `pinyin-drill/drill.py` — Python 3.14 標準庫，無外部依賴（sqlite3 + json + time）
+- `data/seed_apostrophe.json` 30 題、`seed_nng_chars.json` 56 題、`seed_nng_words.json` 35 題
+- `--strict` flag：只接受 preferred 形式（練習模式）；預設寬鬆（accept 全部 IME-valid，實戰模式）
+- SQLite 持久化統計（每題 hanzi/category/time_ms/correct/matched_preferred）
+
+**迭代過程**（保留以供未來參考）：
+1. 初版不含 jianpin accepted → 用戶抓到 `zf` for 政府 IME 吃但判錯 → 補 jianpin 到 33 個 nng-word items
+2. 嘗試加 注音 feedback 當鷹架 → 用戶指出「多一層 translation 效率差」→ 還原到 pre-zhuyin 狀態當 v0.1.0 baseline
+3. 規則分離：判定嚴格度從資料層搬到 `--strict` 模式 flag（遊戲規則 vs 題庫資料解耦）
+
+**延伸討論**（不在 tools 專案範圍，記在此避免遺忘）：
+- 同 session 討論輸入法主戰場，結論：**長期轉注音** — 母語層（無 translation）、跨裝置通用（iPhone/Mac/Win 內建）、容錯強（錯字仍可讀）、維護成本零
+- 無蝦米不廢，降為 Windows 備援（主力舞台轉 Mac mini + iPhone 後時間占比本就下降）
+- 小麥注音已 `brew install --cask mcbopomofo` 下載（安裝檔在 `/opt/homebrew/Caskroom/mcbopomofo/3.0/`），用戶未來自行 `open` 安裝
+- 注音鍵位練習用 World of Keyboards + typing.tw，不自建
+
+**pinyin-drill 的新定位**：這個 session 走一圈後，pinyin-drill 從「主力工具」降為「備援 + 實驗性小品」。Mac 主力轉注音後使用頻率會降，但作為完整 MVP 保留（跨裝置拼音場景仍有用，例如朋友電腦或舊習慣回補）。

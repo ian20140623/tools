@@ -1,0 +1,786 @@
+[
+  {
+    "hanzi": "心",
+    "category": "nng-char",
+    "accepted": [
+      "xin"
+    ],
+    "preferred": "xin",
+    "trap": [
+      "xing"
+    ],
+    "tags": [
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "興",
+    "category": "nng-char",
+    "accepted": [
+      "xing"
+    ],
+    "preferred": "xing",
+    "trap": [
+      "xin"
+    ],
+    "tags": [
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "新",
+    "category": "nng-char",
+    "accepted": [
+      "xin"
+    ],
+    "preferred": "xin",
+    "trap": [
+      "xing"
+    ],
+    "tags": [
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "星",
+    "category": "nng-char",
+    "accepted": [
+      "xing"
+    ],
+    "preferred": "xing",
+    "trap": [
+      "xin"
+    ],
+    "tags": [
+      "xin-xing"
+    ]
+  },
+  {
+    "hanzi": "金",
+    "category": "nng-char",
+    "accepted": [
+      "jin"
+    ],
+    "preferred": "jin",
+    "trap": [
+      "jing"
+    ],
+    "tags": [
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "京",
+    "category": "nng-char",
+    "accepted": [
+      "jing"
+    ],
+    "preferred": "jing",
+    "trap": [
+      "jin"
+    ],
+    "tags": [
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "進",
+    "category": "nng-char",
+    "accepted": [
+      "jin"
+    ],
+    "preferred": "jin",
+    "trap": [
+      "jing"
+    ],
+    "tags": [
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "經",
+    "category": "nng-char",
+    "accepted": [
+      "jing"
+    ],
+    "preferred": "jing",
+    "trap": [
+      "jin"
+    ],
+    "tags": [
+      "jin-jing"
+    ]
+  },
+  {
+    "hanzi": "林",
+    "category": "nng-char",
+    "accepted": [
+      "lin"
+    ],
+    "preferred": "lin",
+    "trap": [
+      "ling"
+    ],
+    "tags": [
+      "lin-ling"
+    ]
+  },
+  {
+    "hanzi": "靈",
+    "category": "nng-char",
+    "accepted": [
+      "ling"
+    ],
+    "preferred": "ling",
+    "trap": [
+      "lin"
+    ],
+    "tags": [
+      "lin-ling"
+    ]
+  },
+  {
+    "hanzi": "民",
+    "category": "nng-char",
+    "accepted": [
+      "min"
+    ],
+    "preferred": "min",
+    "trap": [
+      "ming"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "明",
+    "category": "nng-char",
+    "accepted": [
+      "ming"
+    ],
+    "preferred": "ming",
+    "trap": [
+      "min"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "名",
+    "category": "nng-char",
+    "accepted": [
+      "ming"
+    ],
+    "preferred": "ming",
+    "trap": [
+      "min"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "分",
+    "category": "nng-char",
+    "accepted": [
+      "fen"
+    ],
+    "preferred": "fen",
+    "trap": [
+      "feng"
+    ],
+    "tags": [
+      "fen-feng"
+    ]
+  },
+  {
+    "hanzi": "風",
+    "category": "nng-char",
+    "accepted": [
+      "feng"
+    ],
+    "preferred": "feng",
+    "trap": [
+      "fen"
+    ],
+    "tags": [
+      "fen-feng"
+    ]
+  },
+  {
+    "hanzi": "封",
+    "category": "nng-char",
+    "accepted": [
+      "feng"
+    ],
+    "preferred": "feng",
+    "trap": [
+      "fen"
+    ],
+    "tags": [
+      "fen-feng"
+    ]
+  },
+  {
+    "hanzi": "深",
+    "category": "nng-char",
+    "accepted": [
+      "shen"
+    ],
+    "preferred": "shen",
+    "trap": [
+      "sheng"
+    ],
+    "tags": [
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "生",
+    "category": "nng-char",
+    "accepted": [
+      "sheng"
+    ],
+    "preferred": "sheng",
+    "trap": [
+      "shen"
+    ],
+    "tags": [
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "身",
+    "category": "nng-char",
+    "accepted": [
+      "shen"
+    ],
+    "preferred": "shen",
+    "trap": [
+      "sheng"
+    ],
+    "tags": [
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "聲",
+    "category": "nng-char",
+    "accepted": [
+      "sheng"
+    ],
+    "preferred": "sheng",
+    "trap": [
+      "shen"
+    ],
+    "tags": [
+      "shen-sheng"
+    ]
+  },
+  {
+    "hanzi": "人",
+    "category": "nng-char",
+    "accepted": [
+      "ren"
+    ],
+    "preferred": "ren",
+    "trap": [
+      "reng"
+    ],
+    "tags": [
+      "ren-reng"
+    ]
+  },
+  {
+    "hanzi": "仍",
+    "category": "nng-char",
+    "accepted": [
+      "reng"
+    ],
+    "preferred": "reng",
+    "trap": [
+      "ren"
+    ],
+    "tags": [
+      "ren-reng"
+    ]
+  },
+  {
+    "hanzi": "真",
+    "category": "nng-char",
+    "accepted": [
+      "zhen"
+    ],
+    "preferred": "zhen",
+    "trap": [
+      "zheng"
+    ],
+    "tags": [
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "爭",
+    "category": "nng-char",
+    "accepted": [
+      "zheng"
+    ],
+    "preferred": "zheng",
+    "trap": [
+      "zhen"
+    ],
+    "tags": [
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "正",
+    "category": "nng-char",
+    "accepted": [
+      "zheng"
+    ],
+    "preferred": "zheng",
+    "trap": [
+      "zhen"
+    ],
+    "tags": [
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "陣",
+    "category": "nng-char",
+    "accepted": [
+      "zhen"
+    ],
+    "preferred": "zhen",
+    "trap": [
+      "zheng"
+    ],
+    "tags": [
+      "zhen-zheng"
+    ]
+  },
+  {
+    "hanzi": "安",
+    "category": "nng-char",
+    "accepted": [
+      "an"
+    ],
+    "preferred": "an",
+    "trap": [
+      "ang"
+    ],
+    "tags": [
+      "an-ang"
+    ]
+  },
+  {
+    "hanzi": "骯",
+    "category": "nng-char",
+    "accepted": [
+      "ang"
+    ],
+    "preferred": "ang",
+    "trap": [
+      "an"
+    ],
+    "tags": [
+      "an-ang"
+    ]
+  },
+  {
+    "hanzi": "班",
+    "category": "nng-char",
+    "accepted": [
+      "ban"
+    ],
+    "preferred": "ban",
+    "trap": [
+      "bang"
+    ],
+    "tags": [
+      "ban-bang"
+    ]
+  },
+  {
+    "hanzi": "幫",
+    "category": "nng-char",
+    "accepted": [
+      "bang"
+    ],
+    "preferred": "bang",
+    "trap": [
+      "ban"
+    ],
+    "tags": [
+      "ban-bang"
+    ]
+  },
+  {
+    "hanzi": "單",
+    "category": "nng-char",
+    "accepted": [
+      "dan"
+    ],
+    "preferred": "dan",
+    "trap": [
+      "dang"
+    ],
+    "tags": [
+      "dan-dang"
+    ]
+  },
+  {
+    "hanzi": "當",
+    "category": "nng-char",
+    "accepted": [
+      "dang"
+    ],
+    "preferred": "dang",
+    "trap": [
+      "dan"
+    ],
+    "tags": [
+      "dan-dang"
+    ]
+  },
+  {
+    "hanzi": "飯",
+    "category": "nng-char",
+    "accepted": [
+      "fan"
+    ],
+    "preferred": "fan",
+    "trap": [
+      "fang"
+    ],
+    "tags": [
+      "fan-fang"
+    ]
+  },
+  {
+    "hanzi": "放",
+    "category": "nng-char",
+    "accepted": [
+      "fang"
+    ],
+    "preferred": "fang",
+    "trap": [
+      "fan"
+    ],
+    "tags": [
+      "fan-fang"
+    ]
+  },
+  {
+    "hanzi": "方",
+    "category": "nng-char",
+    "accepted": [
+      "fang"
+    ],
+    "preferred": "fang",
+    "trap": [
+      "fan"
+    ],
+    "tags": [
+      "fan-fang"
+    ]
+  },
+  {
+    "hanzi": "本",
+    "category": "nng-char",
+    "accepted": [
+      "ben"
+    ],
+    "preferred": "ben",
+    "trap": [
+      "beng"
+    ],
+    "tags": [
+      "ben-beng"
+    ]
+  },
+  {
+    "hanzi": "崩",
+    "category": "nng-char",
+    "accepted": [
+      "beng"
+    ],
+    "preferred": "beng",
+    "trap": [
+      "ben"
+    ],
+    "tags": [
+      "ben-beng"
+    ]
+  },
+  {
+    "hanzi": "問",
+    "category": "nng-char",
+    "accepted": [
+      "wen"
+    ],
+    "preferred": "wen",
+    "trap": [
+      "weng"
+    ],
+    "tags": [
+      "wen-weng"
+    ]
+  },
+  {
+    "hanzi": "文",
+    "category": "nng-char",
+    "accepted": [
+      "wen"
+    ],
+    "preferred": "wen",
+    "trap": [
+      "weng"
+    ],
+    "tags": [
+      "wen-weng"
+    ]
+  },
+  {
+    "hanzi": "翁",
+    "category": "nng-char",
+    "accepted": [
+      "weng"
+    ],
+    "preferred": "weng",
+    "trap": [
+      "wen"
+    ],
+    "tags": [
+      "wen-weng"
+    ]
+  },
+  {
+    "hanzi": "門",
+    "category": "nng-char",
+    "accepted": [
+      "men"
+    ],
+    "preferred": "men",
+    "trap": [
+      "meng"
+    ],
+    "tags": [
+      "men-meng"
+    ]
+  },
+  {
+    "hanzi": "蒙",
+    "category": "nng-char",
+    "accepted": [
+      "meng"
+    ],
+    "preferred": "meng",
+    "trap": [
+      "men"
+    ],
+    "tags": [
+      "men-meng"
+    ]
+  },
+  {
+    "hanzi": "夢",
+    "category": "nng-char",
+    "accepted": [
+      "meng"
+    ],
+    "preferred": "meng",
+    "trap": [
+      "men"
+    ],
+    "tags": [
+      "men-meng"
+    ]
+  },
+  {
+    "hanzi": "根",
+    "category": "nng-char",
+    "accepted": [
+      "gen"
+    ],
+    "preferred": "gen",
+    "trap": [
+      "geng"
+    ],
+    "tags": [
+      "gen-geng"
+    ]
+  },
+  {
+    "hanzi": "更",
+    "category": "nng-char",
+    "accepted": [
+      "geng"
+    ],
+    "preferred": "geng",
+    "trap": [
+      "gen"
+    ],
+    "tags": [
+      "gen-geng"
+    ]
+  },
+  {
+    "hanzi": "肯",
+    "category": "nng-char",
+    "accepted": [
+      "ken"
+    ],
+    "preferred": "ken",
+    "trap": [
+      "keng"
+    ],
+    "tags": [
+      "ken-keng"
+    ]
+  },
+  {
+    "hanzi": "坑",
+    "category": "nng-char",
+    "accepted": [
+      "keng"
+    ],
+    "preferred": "keng",
+    "trap": [
+      "ken"
+    ],
+    "tags": [
+      "ken-keng"
+    ]
+  },
+  {
+    "hanzi": "品",
+    "category": "nng-char",
+    "accepted": [
+      "pin"
+    ],
+    "preferred": "pin",
+    "trap": [
+      "ping"
+    ],
+    "tags": [
+      "pin-ping"
+    ]
+  },
+  {
+    "hanzi": "平",
+    "category": "nng-char",
+    "accepted": [
+      "ping"
+    ],
+    "preferred": "ping",
+    "trap": [
+      "pin"
+    ],
+    "tags": [
+      "pin-ping"
+    ]
+  },
+  {
+    "hanzi": "拼",
+    "category": "nng-char",
+    "accepted": [
+      "pin"
+    ],
+    "preferred": "pin",
+    "trap": [
+      "ping"
+    ],
+    "tags": [
+      "pin-ping"
+    ]
+  },
+  {
+    "hanzi": "敏",
+    "category": "nng-char",
+    "accepted": [
+      "min"
+    ],
+    "preferred": "min",
+    "trap": [
+      "ming"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "命",
+    "category": "nng-char",
+    "accepted": [
+      "ming"
+    ],
+    "preferred": "ming",
+    "trap": [
+      "min"
+    ],
+    "tags": [
+      "min-ming"
+    ]
+  },
+  {
+    "hanzi": "因",
+    "category": "nng-char",
+    "accepted": [
+      "yin"
+    ],
+    "preferred": "yin",
+    "trap": [
+      "ying"
+    ],
+    "tags": [
+      "yin-ying"
+    ]
+  },
+  {
+    "hanzi": "英",
+    "category": "nng-char",
+    "accepted": [
+      "ying"
+    ],
+    "preferred": "ying",
+    "trap": [
+      "yin"
+    ],
+    "tags": [
+      "yin-ying"
+    ]
+  },
+  {
+    "hanzi": "影",
+    "category": "nng-char",
+    "accepted": [
+      "ying"
+    ],
+    "preferred": "ying",
+    "trap": [
+      "yin"
+    ],
+    "tags": [
+      "yin-ying"
+    ]
+  },
+  {
+    "hanzi": "引",
+    "category": "nng-char",
+    "accepted": [
+      "yin"
+    ],
+    "preferred": "yin",
+    "trap": [
+      "ying"
+    ],
+    "tags": [
+      "yin-ying"
+    ]
+  }
+]
