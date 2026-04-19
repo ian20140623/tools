@@ -123,6 +123,10 @@
 
 ## 2026-04-19（日）
 
+### 13:30 [MAC-MINI] pinyin-drill v0.1.2 — feedback 視覺化 + 雙軌正確率
+
+錯題改 side-by-side 對照（`你打 [X] → 正解 [Y] (情境)`），每題秀本局/全局正確率，session 結算加 filtered 全局累計。不改核心行為、只改顯示。用戶「故意錯會污染」的疑慮由雙軌透明度滿足，不加 undo/skip（retrieval practice 原則）。詳見 pinyin-drill/log_chronological.md。
+
 ### 13:01 [MAC-MINI] pinyin-drill v0.1.1 — drill_nng.py 聚焦變體
 
 用戶試用超注音期間仍想補拼音 n/ng 知識缺口。加了 `drill_nng.py` 薄包裝，固定 `--category nng-char --strict`，只暴露 count/stats。OCP：不改 drill.py 核心，用 wrapper 擴充聚焦場景。VERSION 0.1.0 → 0.1.1。詳見 pinyin-drill/log_chronological.md。

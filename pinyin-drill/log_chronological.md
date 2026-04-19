@@ -70,6 +70,28 @@
 
 ## 2026-04-19（日）
 
+### 13:30 [MAC-MINI] v0.1.2 改善回饋與統計視覺化
+
+**用戶需求**：錯題要清楚對照（我打什麼 vs 正解）、每題秀本局 + 全局正確率
+
+**改動**
+- `give_feedback()` 重寫為 side-by-side 格式：
+  - 完美：`✓ 完美  你打 [xxx]  (N ms)`
+  - 對（非 preferred）：`✓ 對  你打 [xxx]  →  preferred [yyy]  (N ms)`
+  - 錯：`✗ 錯  你打 [xxx]  →  正解 [yyy] (情境 tag)`
+  - 情境 tag：`(典型陷阱)` / `(嚴格模式：IME 吃但不算)`
+- 新增 `global_stats(conn, categories)` helper，filtered 查詢該 session 類別的全期累計
+- 每題 feedback 後加一行：`本局 X/Y (Z%)   全局 N/M (P%)`
+- 結算報告加：`全局累計 X/Y (Z%)  （依類別：nng-char）`
+
+**設計決策**
+- 全局統計 filter 到當前 session 類別（不跨類汙染）：apostrophe session 看 apostrophe 全局，不混 nng-char
+- 全局 = 全期累計，不自動衰減（若要近 N 題版以後再加）
+- 權重系統維持 rolling window of 5（之前就有）— 統計顯示跟抽題權重是兩條邏輯
+
+**脈絡**
+前面討論「故意打錯污染紀錄」議題，結論是 retrieval practice 下猜錯也是學習數據，不加逃避機制（--no-record / undo / skip）。本次只改顯示，不改核心行為。用戶對「數字準不準」有關懷 → 補上雙軌正確率滿足透明度。
+
 ### 13:01 [MAC-MINI] v0.1.1 加 drill_nng.py 聚焦變體
 
 **情境**：用戶反饋「拼音有練還是有差」— 注音評估期間仍想補 n/ng 知識缺口。現有 `drill.py --category nng-char --strict` 能達成，但參數多，使用門檻高。

@@ -64,6 +64,16 @@ def init_db():
     return conn
 
 
+def global_stats(conn, categories):
+    """回傳 (total, correct) — 指定 categories 的全期累計。"""
+    placeholders = ",".join("?" * len(categories))
+    row = conn.execute(
+        f"SELECT COUNT(*), COALESCE(SUM(correct),0) FROM attempts WHERE category IN ({placeholders})",
+        categories,
+    ).fetchone()
+    return row[0], row[1]
+
+
 def median_correct_ms(conn, category):
     rows = conn.execute(
         "SELECT time_ms FROM attempts WHERE category=? AND correct=1 ORDER BY ts DESC LIMIT 50",
@@ -143,22 +153,21 @@ def ask(item):
 
 
 def give_feedback(item, user_input, result, time_ms, strict=False):
+    ui = user_input.strip()
+    pref = item.get("preferred", "")
     if result == "preferred":
-        print(f"  \033[1;32m✓ 完美\033[0m  ({time_ms} ms)")
+        print(f"  \033[1;32m✓ 完美\033[0m  你打 [{ui}]  ({time_ms} ms)")
     elif result == "accepted":
-        print(f"  \033[32m✓ 對\033[0m  ({time_ms} ms)")
+        print(f"  \033[32m✓ 對\033[0m  你打 [{ui}]  →  preferred [{pref}]  ({time_ms} ms)")
     else:
-        ui = user_input.strip()
-        accepted = item.get("accepted", [])
         trap = item.get("trap", [])
-        pref = item.get("preferred", "")
-        if strict and ui in accepted:
-            msg = f"嚴格模式：本題要求 [{pref}]，你打的 [{ui}] IME 吃但不算"
+        if strict and ui in item.get("accepted", []):
+            ctx = " (嚴格模式：IME 吃但不算)"
         elif ui in trap:
-            msg = f"典型陷阱！正解：[{pref}]"
+            ctx = " (典型陷阱)"
         else:
-            msg = f"IME 不吃這個  正解之一：[{accepted[0] if accepted else '?'}]"
-        print(f"  \033[1;31m✗ 錯\033[0m  {msg}")
+            ctx = ""
+        print(f"  \033[1;31m✗ 錯\033[0m  你打 [{ui}]  →  正解 [{pref}]{ctx}")
     if item.get("note"):
         print(f"  備註：{item['note']}")
 
@@ -194,7 +203,7 @@ def print_report(session_log):
     print("  本輪結果")
     print("=" * 40)
     print(f"  題數        {n}")
-    print(f"  正確率      {correct}/{n} ({100*correct//n}%)")
+    print(f"  本局正確率  {correct}/{n} ({100*correct//n}%)")
     print(f"  效率命中    {preferred}/{n} ({100*preferred//n}%)")
     print(f"  平均用時    {avg_ms} ms（正確題）")
 
@@ -300,8 +309,18 @@ def main():
             }
         )
         excluded.add(pick["hanzi"])
+        # 本局 / 全局 正確率（每題秀一行）
+        sc = sum(1 for r in session_log if r["result"] != "wrong")
+        sn = len(session_log)
+        gn, gc = global_stats(conn, cats)
+        sp = 100 * sc // max(sn, 1)
+        gp = 100 * gc // max(gn, 1)
+        print(f"  本局 {sc}/{sn} ({sp}%)   全局 {gc}/{gn} ({gp}%)")
 
     print_report(session_log)
+    gn, gc = global_stats(conn, cats)
+    if gn > 0:
+        print(f"  全局累計    {gc}/{gn} ({100*gc//gn}%)  （依類別：{','.join(cats)}）")
 
 
 if __name__ == "__main__":
