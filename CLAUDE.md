@@ -4,11 +4,11 @@
 
 
 ## 核心原則
-SRP / Information Hiding / OCP / No Silent Workaround(遇阻停下報告不繞路) / Explicit Intent(做之前先宣告 scope)。詳見 [shared/ARCHITECTURE_PRINCIPLES.md](../shared/ARCHITECTURE_PRINCIPLES.md)。
+SRP / Information Hiding / OCP / No Silent Workaround(遇阻停下報告不繞路) / Explicit Intent(做之前先宣告 scope)。詳見 [shared/ARCHITECTURE_PRINCIPLES.md](../shared/ARCHITECTURE_PRINCIPLES.md)。 ^ck-ecf3af-1
 
 ## 專案定位
 
-跨專案共用小工具集合。每個工具服務所有 `C:\Projects\` 下的專案，不屬於任何單一專案。
+跨專案共用小工具集合。每個工具服務所有 `C:\Projects\` 下的專案，不屬於任何單一專案。 ^ck-ff3e45-2
 
 ## 環境需求
 

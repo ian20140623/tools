@@ -1,6 +1,8 @@
 # pinyin-drill — 開發記錄
+^ck-f3d824-0
 
 ## 2026-04-18（六）
+^ck-62f562-1
 
 ### 16:20 [MAC-MINI] 開案：Mac 拼音練習遊戲
 
@@ -29,7 +31,7 @@
 **今天做到**
 - ROADMAP.md 加階段目標 D
 - 建 tools/pinyin-drill/ 資料夾 + data/ 子目錄
-- README + log 建好
+- README + log 建好 ^ck-793e2f-2
 
 ### 17:00~19:00 [MAC-MINI] MVP 建置 + 第一輪迭代 + v0.1.0 凍結
 
@@ -66,9 +68,10 @@
 - git commit + tag（交 lcp 流程）
 - 多字詞題庫擴充
 - `--zhuyin` opt-in flag（未來若需要鷹架再加）
-- 立即重抽錯題（肌肉記憶 immediate correction 機制，留給 v0.1.1+）
+- 立即重抽錯題（肌肉記憶 immediate correction 機制，留給 v0.1.1+） ^ck-b2bf6c-3
 
 ## 2026-04-19（日）
+^ck-60deaf-4
 
 ### 13:30 [MAC-MINI] v0.1.2 改善回饋與統計視覺化（tag 覆寫兩次）
 
@@ -92,7 +95,7 @@
 - 權重系統維持 rolling window of 5（之前就有）— 統計顯示跟抽題權重是兩條邏輯
 
 **脈絡**
-前面討論「故意打錯污染紀錄」議題，結論是 retrieval practice 下猜錯也是學習數據，不加逃避機制（--no-record / undo / skip）。本次只改顯示，不改核心行為。用戶對「數字準不準」有關懷 → 補上雙軌正確率滿足透明度。
+前面討論「故意打錯污染紀錄」議題，結論是 retrieval practice 下猜錯也是學習數據，不加逃避機制（--no-record / undo / skip）。本次只改顯示，不改核心行為。用戶對「數字準不準」有關懷 → 補上雙軌正確率滿足透明度。 ^ck-4d1172-5
 
 ### 13:01 [MAC-MINI] v0.1.1 加 drill_nng.py 聚焦變體
 
@@ -119,4 +122,4 @@
 
 **沒做**
 - 不改 drill.py 主檔（避免污染 v0.1.0 的 smoke test 基線）
-- 不做 drill_apostrophe.py（等真有需要再說）
+- 不做 drill_apostrophe.py（等真有需要再說） ^ck-a83a8d-6

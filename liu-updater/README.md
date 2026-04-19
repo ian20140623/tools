@@ -1,12 +1,13 @@
 # liu-updater
 
-更新 liu.box（無蝦米自定義字典）裡的時間相關字根。
+更新 liu.box（無蝦米自定義字典）裡的時間相關字根。 ^ck-b69516-0
 
 ## 用途
 
-liu.box 裡有一組時間字根（今年、去年、這個月等），需要隨時間更新。以前手動改，現在一鍵搞定。
+liu.box 裡有一組時間字根（今年、去年、這個月等），需要隨時間更新。以前手動改，現在一鍵搞定。 ^ck-6e87f0-1
 
 ## 字根對照
+^ck-025dc9-2
 
 ### 年度 & 月份
 
@@ -18,6 +19,7 @@ liu.box 裡有一組時間字根（今年、去年、這個月等），需要隨
 | NY  | 明年 | 2027年 |
 | NNY | 後年 | 2028年 |
 | TM  | 這個月 | 2026-03- |
+^ck-55d564-3
 
 ### 季度（嘸蝦米數字：E=1, R=2, S=3, F=4）
 
@@ -30,6 +32,7 @@ liu.box 裡有一組時間字根（今年、去年、這個月等），需要隨
 | ERQ  | 上半年 | 1-2Q26 |
 | ESQ  | 前三季累計 | 9M26累計 |
 | QARP | 年報 | [2026年報] |
+^ck-42a06f-4
 
 ### 臨近 2 季度原則
 
@@ -48,6 +51,7 @@ liu.box 裡有一組時間字根（今年、去年、這個月等），需要隨
 | 2Q26 | 1Q26 | 2Q26 | 3Q26 | 4Q |
 | 3Q26 | 1Q26 | 2Q26 | 3Q26 | 4Q26 |
 | 4Q26 | 1Q27 | 2Q | 3Q26 | 4Q26 |
+^ck-982125-5
 
 ## 用法
 
@@ -57,7 +61,7 @@ python tools/liu-updater/scripts/update_liu_dates.py
 
 跑完會同時更新：
 - `C:\Users\Ian\Dropbox\設定檔\liu.box`（無蝦米讀的）
-- `tools/espanso/liu.box`（repo 備份）
+- `tools/espanso/liu.box`（repo 備份） ^ck-7361f3-6
 
 ## 檔案
 
@@ -67,8 +71,8 @@ liu-updater/
 ├── log_chronological.md
 └── scripts/
     └── update_liu_dates.py
-```
+``` ^ck-d83a61-7
 
 ## 依賴
 
-Python 標準庫，無外部依賴。
+Python 標準庫，無外部依賴。 ^ck-b8714f-8
