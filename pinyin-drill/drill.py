@@ -225,7 +225,7 @@ def print_report(session_log):
     if wrongs:
         print("\n  錯的題：")
         for r in wrongs:
-            print(f"    {r['hanzi']}  你打 [{r['user_input']}]")
+            print(f"    {r['hanzi']}  正解 [{r.get('preferred', '?')}]")
     slow = sorted(
         (r for r in session_log if r["result"] != "wrong"),
         key=lambda r: -r["time_ms"],
@@ -304,6 +304,7 @@ def main():
                 "hanzi": pick["hanzi"],
                 "category": pick["category"],
                 "user_input": ui.strip(),
+                "preferred": pick.get("preferred", ""),
                 "result": result,
                 "time_ms": time_ms,
             }

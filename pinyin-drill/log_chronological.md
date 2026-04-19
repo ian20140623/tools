@@ -80,6 +80,8 @@
   - 對（非 preferred）：`✓ 對  preferred [yyy]  (N ms)`
   - 錯：`✗ 錯  正解 [yyy] (情境 tag)`
   - 情境 tag：`(典型陷阱)` / `(嚴格模式：IME 吃但不算)`
+- `print_report()` 結算錯題表同樣精簡：`{hanzi}  正解 [{preferred}]`（原為 `你打 [{input}]`）
+- `session_log` 加存 `preferred` 欄位供 report 使用
 - 新增 `global_stats(conn, categories)` helper，filtered 查詢該 session 類別的全期累計
 - 每題 feedback 後加一行：`本局 X/Y (Z%)   全局 N/M (P%)`
 - 結算報告加：`全局累計 X/Y (Z%)  （依類別：nng-char）`
