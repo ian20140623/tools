@@ -1,0 +1,3 @@
+stats.sqlite
+__pycache__/
+*.pyc

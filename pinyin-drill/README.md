@@ -30,13 +30,16 @@ Python 3.14+ 標準庫（sqlite3 / json / time / random），無外部依賴。
 ## 怎麼跑
 
 ```bash
-# 自動模式（弱點優先）
-python drill.py
+# 自動模式（混合三類，弱點優先）
+python3 drill.py
 
 # 指定類別
-python drill.py --category apostrophe --count 20
-python drill.py --category nng-char
-python drill.py --category nng-word
+python3 drill.py --category apostrophe --count 20
+python3 drill.py --category nng-char
+python3 drill.py --category nng-word
+
+# v0.1.1 聚焦：只 n/ng 單字 + 嚴格模式（不收簡拼、不被 apostrophe 題干擾）
+python3 drill_nng.py --count 20
 ```
 
 ## 判定邏輯

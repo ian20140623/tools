@@ -120,3 +120,9 @@
 - 注音鍵位練習用 World of Keyboards + typing.tw，不自建
 
 **pinyin-drill 的新定位**：這個 session 走一圈後，pinyin-drill 從「主力工具」降為「備援 + 實驗性小品」。Mac 主力轉注音後使用頻率會降，但作為完整 MVP 保留（跨裝置拼音場景仍有用，例如朋友電腦或舊習慣回補）。
+
+## 2026-04-19（日）
+
+### 13:01 [MAC-MINI] pinyin-drill v0.1.1 — drill_nng.py 聚焦變體
+
+用戶試用超注音期間仍想補拼音 n/ng 知識缺口。加了 `drill_nng.py` 薄包裝，固定 `--category nng-char --strict`，只暴露 count/stats。OCP：不改 drill.py 核心，用 wrapper 擴充聚焦場景。VERSION 0.1.0 → 0.1.1。詳見 pinyin-drill/log_chronological.md。

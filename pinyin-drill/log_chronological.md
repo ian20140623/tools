@@ -67,3 +67,32 @@
 - 多字詞題庫擴充
 - `--zhuyin` opt-in flag（未來若需要鷹架再加）
 - 立即重抽錯題（肌肉記憶 immediate correction 機制，留給 v0.1.1+）
+
+## 2026-04-19（日）
+
+### 13:01 [MAC-MINI] v0.1.1 加 drill_nng.py 聚焦變體
+
+**情境**：用戶反饋「拼音有練還是有差」— 注音評估期間仍想補 n/ng 知識缺口。現有 `drill.py --category nng-char --strict` 能達成，但參數多，使用門檻高。
+
+**做了什麼**
+- 新增 `drill_nng.py` — 薄包裝，固定 `--category nng-char --strict`，只暴露 `--count` 和 `--stats`
+- VERSION 0.1.0 → 0.1.1
+- README 加「v0.1.1 聚焦」一行說明
+
+**設計決策**
+- 用 wrapper script 而非新 CLI 模式：
+  - 保持 drill.py 核心不動（OCP：對修改關閉，對擴充開放）
+  - 未來若有其他聚焦場景（apostrophe only、複合），同模式可擴
+- 不複製題庫資料，drill_nng.py 仍讀 seed_nng_chars.json
+- 不另開 stats.sqlite（共享當前目錄的統計，累計紀錄跨模式有效）
+
+**驗證**
+- 4/4 grade path smoke test pass（`心/生 × preferred/wrong`）
+- `--stats` mode 能正常跑
+
+**脈絡**
+用戶 2026-04-18 晚上試超注音 28 天，本次開 session 表示想平行繼續練拼音 n/ng。不影響注音評估，兩條路並行。
+
+**沒做**
+- 不改 drill.py 主檔（避免污染 v0.1.0 的 smoke test 基線）
+- 不做 drill_apostrophe.py（等真有需要再說）
