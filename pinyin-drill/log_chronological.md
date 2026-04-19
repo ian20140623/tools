@@ -70,15 +70,15 @@
 
 ## 2026-04-19（日）
 
-### 13:30 [MAC-MINI] v0.1.2 改善回饋與統計視覺化
+### 13:30 [MAC-MINI] v0.1.2 改善回饋與統計視覺化（tag 覆寫兩次）
 
-**用戶需求**：錯題要清楚對照（我打什麼 vs 正解）、每題秀本局 + 全局正確率
+**用戶需求**：錯題要清楚對照、每題秀本局 + 全局正確率；回饋精簡（拿掉「你打」回聲）
 
 **改動**
-- `give_feedback()` 重寫為 side-by-side 格式：
-  - 完美：`✓ 完美  你打 [xxx]  (N ms)`
-  - 對（非 preferred）：`✓ 對  你打 [xxx]  →  preferred [yyy]  (N ms)`
-  - 錯：`✗ 錯  你打 [xxx]  →  正解 [yyy] (情境 tag)`
+- `give_feedback()` 精簡為只秀正解對照（用戶在 terminal 自己看得到輸入，不用回聲）：
+  - 完美：`✓ 完美  (N ms)`
+  - 對（非 preferred）：`✓ 對  preferred [yyy]  (N ms)`
+  - 錯：`✗ 錯  正解 [yyy] (情境 tag)`
   - 情境 tag：`(典型陷阱)` / `(嚴格模式：IME 吃但不算)`
 - 新增 `global_stats(conn, categories)` helper，filtered 查詢該 session 類別的全期累計
 - 每題 feedback 後加一行：`本局 X/Y (Z%)   全局 N/M (P%)`

@@ -156,9 +156,9 @@ def give_feedback(item, user_input, result, time_ms, strict=False):
     ui = user_input.strip()
     pref = item.get("preferred", "")
     if result == "preferred":
-        print(f"  \033[1;32m✓ 完美\033[0m  你打 [{ui}]  ({time_ms} ms)")
+        print(f"  \033[1;32m✓ 完美\033[0m  ({time_ms} ms)")
     elif result == "accepted":
-        print(f"  \033[32m✓ 對\033[0m  你打 [{ui}]  →  preferred [{pref}]  ({time_ms} ms)")
+        print(f"  \033[32m✓ 對\033[0m  preferred [{pref}]  ({time_ms} ms)")
     else:
         trap = item.get("trap", [])
         if strict and ui in item.get("accepted", []):
@@ -167,7 +167,7 @@ def give_feedback(item, user_input, result, time_ms, strict=False):
             ctx = " (典型陷阱)"
         else:
             ctx = ""
-        print(f"  \033[1;31m✗ 錯\033[0m  你打 [{ui}]  →  正解 [{pref}]{ctx}")
+        print(f"  \033[1;31m✗ 錯\033[0m  正解 [{pref}]{ctx}")
     if item.get("note"):
         print(f"  備註：{item['note']}")
 
