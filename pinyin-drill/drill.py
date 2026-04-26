@@ -167,7 +167,9 @@ def give_feedback(item, user_input, result, time_ms, strict=False):
             ctx = " (典型陷阱)"
         else:
             ctx = ""
-        print(f"  \033[1;31m✗ 錯\033[0m  正解 [{pref}]{ctx}")
+        zh = item.get("zhuyin")
+        zh_part = f"  注音 {zh}" if zh else ""
+        print(f"  \033[1;31m✗ 錯\033[0m  正解 [{pref}]{zh_part}{ctx}")
     if item.get("note"):
         print(f"  備註：{item['note']}")
 
@@ -225,7 +227,9 @@ def print_report(session_log):
     if wrongs:
         print("\n  錯的題：")
         for r in wrongs:
-            print(f"    {r['hanzi']}  正解 [{r.get('preferred', '?')}]")
+            zh = r.get("zhuyin", "")
+            zh_part = f"  注音 {zh}" if zh else ""
+            print(f"    {r['hanzi']}  正解 [{r.get('preferred', '?')}]{zh_part}")
     slow = sorted(
         (r for r in session_log if r["result"] != "wrong"),
         key=lambda r: -r["time_ms"],
@@ -305,6 +309,7 @@ def main():
                 "category": pick["category"],
                 "user_input": ui.strip(),
                 "preferred": pick.get("preferred", ""),
+                "zhuyin": pick.get("zhuyin", ""),
                 "result": result,
                 "time_ms": time_ms,
             }

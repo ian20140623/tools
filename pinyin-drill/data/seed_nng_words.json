@@ -15,7 +15,8 @@
     "tags": [
       "shen-sheng",
       "min-ming"
-    ]
+    ],
+    "zhuyin": "ㄕㄥ ㄇㄧㄥ"
   },
   {
     "hanzi": "深圳",
@@ -33,7 +34,8 @@
     "tags": [
       "shen-sheng",
       "zhen-zheng"
-    ]
+    ],
+    "zhuyin": "ㄕㄣ ㄓㄣ"
   },
   {
     "hanzi": "新聞",
@@ -51,7 +53,8 @@
     "tags": [
       "xin-xing",
       "wen-weng"
-    ]
+    ],
+    "zhuyin": "ㄒㄧㄣ ㄨㄣ"
   },
   {
     "hanzi": "興奮",
@@ -69,7 +72,8 @@
     "tags": [
       "xin-xing",
       "fen-feng"
-    ]
+    ],
+    "zhuyin": "ㄒㄧㄥ ㄈㄣ"
   },
   {
     "hanzi": "平靜",
@@ -87,7 +91,8 @@
     "tags": [
       "pin-ping",
       "jin-jing"
-    ]
+    ],
+    "zhuyin": "ㄆㄧㄥ ㄐㄧㄥ"
   },
   {
     "hanzi": "命運",
@@ -102,7 +107,8 @@
     ],
     "tags": [
       "min-ming"
-    ]
+    ],
+    "zhuyin": "ㄇㄧㄥ ㄩㄣ"
   },
   {
     "hanzi": "真心",
@@ -120,7 +126,8 @@
     "tags": [
       "zhen-zheng",
       "xin-xing"
-    ]
+    ],
+    "zhuyin": "ㄓㄣ ㄒㄧㄣ"
   },
   {
     "hanzi": "真相",
@@ -135,7 +142,8 @@
     ],
     "tags": [
       "zhen-zheng"
-    ]
+    ],
+    "zhuyin": "ㄓㄣ ㄒㄧㄤ"
   },
   {
     "hanzi": "心情",
@@ -153,7 +161,8 @@
     "tags": [
       "xin-xing",
       "qin-qing"
-    ]
+    ],
+    "zhuyin": "ㄒㄧㄣ ㄑㄧㄥ"
   },
   {
     "hanzi": "成分",
@@ -171,7 +180,8 @@
     "tags": [
       "chen-cheng",
       "fen-feng"
-    ]
+    ],
+    "zhuyin": "ㄔㄥ ㄈㄣ"
   },
   {
     "hanzi": "成績",
@@ -186,7 +196,8 @@
     ],
     "tags": [
       "chen-cheng"
-    ]
+    ],
+    "zhuyin": "ㄔㄥ ㄐㄧ"
   },
   {
     "hanzi": "民生",
@@ -204,7 +215,8 @@
     "tags": [
       "min-ming",
       "shen-sheng"
-    ]
+    ],
+    "zhuyin": "ㄇㄧㄣ ㄕㄥ"
   },
   {
     "hanzi": "人生",
@@ -222,7 +234,8 @@
     "tags": [
       "ren-reng",
       "shen-sheng"
-    ]
+    ],
+    "zhuyin": "ㄖㄣ ㄕㄥ"
   },
   {
     "hanzi": "身分",
@@ -240,7 +253,8 @@
     "tags": [
       "shen-sheng",
       "fen-feng"
-    ]
+    ],
+    "zhuyin": "ㄕㄣ ㄈㄣ"
   },
   {
     "hanzi": "本身",
@@ -258,7 +272,8 @@
     "tags": [
       "ben-beng",
       "shen-sheng"
-    ]
+    ],
+    "zhuyin": "ㄅㄣ ㄕㄣ"
   },
   {
     "hanzi": "風景",
@@ -276,7 +291,8 @@
     "tags": [
       "fen-feng",
       "jin-jing"
-    ]
+    ],
+    "zhuyin": "ㄈㄥ ㄐㄧㄥ"
   },
   {
     "hanzi": "影響",
@@ -291,7 +307,8 @@
     ],
     "tags": [
       "yin-ying"
-    ]
+    ],
+    "zhuyin": "ㄧㄥ ㄒㄧㄤ"
   },
   {
     "hanzi": "進行",
@@ -309,7 +326,8 @@
     "tags": [
       "jin-jing",
       "xin-xing"
-    ]
+    ],
+    "zhuyin": "ㄐㄧㄣ ㄒㄧㄥ"
   },
   {
     "hanzi": "英文",
@@ -327,7 +345,8 @@
     "tags": [
       "yin-ying",
       "wen-weng"
-    ]
+    ],
+    "zhuyin": "ㄧㄥ ㄨㄣ"
   },
   {
     "hanzi": "明白",
@@ -342,7 +361,8 @@
     ],
     "tags": [
       "min-ming"
-    ]
+    ],
+    "zhuyin": "ㄇㄧㄥ ㄅㄞ"
   },
   {
     "hanzi": "精神",
@@ -360,7 +380,8 @@
     "tags": [
       "jin-jing",
       "shen-sheng"
-    ]
+    ],
+    "zhuyin": "ㄐㄧㄥ ㄕㄣ"
   },
   {
     "hanzi": "安寧",
@@ -377,7 +398,8 @@
     "tags": [
       "an-ang",
       "nin-ning"
-    ]
+    ],
+    "zhuyin": "ㄢ ㄋㄧㄥ"
   },
   {
     "hanzi": "平安",
@@ -396,7 +418,8 @@
       "pin-ping",
       "an-ang",
       "vowel-2nd-a"
-    ]
+    ],
+    "zhuyin": "ㄆㄧㄥ ㄢ"
   },
   {
     "hanzi": "金融",
@@ -411,7 +434,8 @@
     ],
     "tags": [
       "jin-jing"
-    ]
+    ],
+    "zhuyin": "ㄐㄧㄣ ㄖㄨㄥ"
   },
   {
     "hanzi": "政府",
@@ -426,7 +450,8 @@
     ],
     "tags": [
       "zhen-zheng"
-    ]
+    ],
+    "zhuyin": "ㄓㄥ ㄈㄨ"
   },
   {
     "hanzi": "朋友",
@@ -441,7 +466,8 @@
     ],
     "tags": [
       "pen-peng"
-    ]
+    ],
+    "zhuyin": "ㄆㄥ ㄧㄡ"
   },
   {
     "hanzi": "產品",
@@ -459,7 +485,8 @@
     "tags": [
       "chan-chang",
       "pin-ping"
-    ]
+    ],
+    "zhuyin": "ㄔㄢ ㄆㄧㄣ"
   },
   {
     "hanzi": "長城",
@@ -477,7 +504,8 @@
     "tags": [
       "chan-chang",
       "chen-cheng"
-    ]
+    ],
+    "zhuyin": "ㄔㄤ ㄔㄥ"
   },
   {
     "hanzi": "方向",
@@ -492,7 +520,8 @@
     ],
     "tags": [
       "fan-fang"
-    ]
+    ],
+    "zhuyin": "ㄈㄤ ㄒㄧㄤ"
   },
   {
     "hanzi": "經濟",
@@ -507,7 +536,8 @@
     ],
     "tags": [
       "jin-jing"
-    ]
+    ],
+    "zhuyin": "ㄐㄧㄥ ㄐㄧ"
   },
   {
     "hanzi": "想念",
@@ -522,7 +552,8 @@
     ],
     "tags": [
       "xian-xiang"
-    ]
+    ],
+    "zhuyin": "ㄒㄧㄤ ㄋㄧㄢ"
   },
   {
     "hanzi": "重新",
@@ -540,7 +571,8 @@
     "tags": [
       "chon-chong",
       "xin-xing"
-    ]
+    ],
+    "zhuyin": "ㄔㄨㄥ ㄒㄧㄣ"
   },
   {
     "hanzi": "反應",
@@ -558,7 +590,8 @@
     "tags": [
       "fan-fang",
       "yin-ying"
-    ]
+    ],
+    "zhuyin": "ㄈㄢ ㄧㄥ"
   },
   {
     "hanzi": "清楚",
@@ -573,7 +606,8 @@
     ],
     "tags": [
       "qin-qing"
-    ]
+    ],
+    "zhuyin": "ㄑㄧㄥ ㄔㄨ"
   },
   {
     "hanzi": "信心",
@@ -590,6 +624,7 @@
     ],
     "tags": [
       "xin-xing"
-    ]
+    ],
+    "zhuyin": "ㄒㄧㄣ ㄒㄧㄣ"
   }
 ]

@@ -2,216 +2,490 @@
   {
     "hanzi": "方案",
     "category": "apostrophe",
-    "accepted": ["fangan", "fang'an", "f'an", "fang'a", "f'a"],
+    "accepted": [
+      "fangan",
+      "fang'an",
+      "f'an",
+      "fang'a",
+      "f'a"
+    ],
     "preferred": "f'an",
-    "tags": ["vowel-2nd-a", "fang-an"],
-    "note": "fa 會被當單音節（發/法），必須用 ' 或全拼"
+    "tags": [
+      "vowel-2nd-a",
+      "fang-an"
+    ],
+    "note": "fa 會被當單音節（發/法），必須用 ' 或全拼",
+    "zhuyin": "ㄈㄤ ㄢ"
   },
   {
     "hanzi": "天安",
     "category": "apostrophe",
-    "accepted": ["tianan", "tian'an", "t'an", "tian'a", "t'a"],
+    "accepted": [
+      "tianan",
+      "tian'an",
+      "t'an",
+      "tian'a",
+      "t'a"
+    ],
     "preferred": "t'an",
-    "tags": ["vowel-2nd-a", "tian-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "tian-an"
+    ],
+    "zhuyin": "ㄊㄧㄢ ㄢ"
   },
   {
     "hanzi": "西安",
     "category": "apostrophe",
-    "accepted": ["xian", "xi'an", "x'an", "xi'a", "x'a"],
+    "accepted": [
+      "xian",
+      "xi'an",
+      "x'an",
+      "xi'a",
+      "x'a"
+    ],
     "preferred": "xi'an",
-    "tags": ["vowel-2nd-a", "xi-an"],
-    "note": "xian 單音節會出 仙/先/現，必須用 ' 才能出西安"
+    "tags": [
+      "vowel-2nd-a",
+      "xi-an"
+    ],
+    "note": "xian 單音節會出 仙/先/現，必須用 ' 才能出西安",
+    "zhuyin": "ㄒㄧ ㄢ"
   },
   {
     "hanzi": "平安",
     "category": "apostrophe",
-    "accepted": ["pingan", "ping'an", "p'an", "ping'a", "p'a"],
+    "accepted": [
+      "pingan",
+      "ping'an",
+      "p'an",
+      "ping'a",
+      "p'a"
+    ],
     "preferred": "p'an",
-    "tags": ["vowel-2nd-a", "ping-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "ping-an"
+    ],
+    "zhuyin": "ㄆㄧㄥ ㄢ"
   },
   {
     "hanzi": "公安",
     "category": "apostrophe",
-    "accepted": ["gongan", "gong'an", "g'an", "gong'a", "g'a"],
+    "accepted": [
+      "gongan",
+      "gong'an",
+      "g'an",
+      "gong'a",
+      "g'a"
+    ],
     "preferred": "g'an",
-    "tags": ["vowel-2nd-a", "gong-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "gong-an"
+    ],
+    "zhuyin": "ㄍㄨㄥ ㄢ"
   },
   {
     "hanzi": "答案",
     "category": "apostrophe",
-    "accepted": ["daan", "da'an", "d'an", "da'a", "d'a"],
+    "accepted": [
+      "daan",
+      "da'an",
+      "d'an",
+      "da'a",
+      "d'a"
+    ],
     "preferred": "d'an",
-    "tags": ["vowel-2nd-a", "da-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "da-an"
+    ],
+    "zhuyin": "ㄉㄚ ㄢ"
   },
   {
     "hanzi": "不安",
     "category": "apostrophe",
-    "accepted": ["buan", "bu'an", "b'an", "bu'a", "b'a"],
+    "accepted": [
+      "buan",
+      "bu'an",
+      "b'an",
+      "bu'a",
+      "b'a"
+    ],
     "preferred": "b'an",
-    "tags": ["vowel-2nd-a", "bu-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "bu-an"
+    ],
+    "zhuyin": "ㄅㄨ ㄢ"
   },
   {
     "hanzi": "治安",
     "category": "apostrophe",
-    "accepted": ["zhian", "zhi'an", "zh'an", "zhi'a", "zh'a"],
+    "accepted": [
+      "zhian",
+      "zhi'an",
+      "zh'an",
+      "zhi'a",
+      "zh'a"
+    ],
     "preferred": "zhi'an",
-    "tags": ["vowel-2nd-a", "zhi-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "zhi-an"
+    ],
+    "zhuyin": "ㄓ ㄢ"
   },
   {
     "hanzi": "長安",
     "category": "apostrophe",
-    "accepted": ["changan", "chang'an", "ch'an", "chang'a", "ch'a"],
+    "accepted": [
+      "changan",
+      "chang'an",
+      "ch'an",
+      "chang'a",
+      "ch'a"
+    ],
     "preferred": "ch'an",
-    "tags": ["vowel-2nd-a", "chang-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "chang-an"
+    ],
+    "zhuyin": "ㄔㄤ ㄢ"
   },
   {
     "hanzi": "延安",
     "category": "apostrophe",
-    "accepted": ["yanan", "yan'an", "y'an", "yan'a", "y'a"],
+    "accepted": [
+      "yanan",
+      "yan'an",
+      "y'an",
+      "yan'a",
+      "y'a"
+    ],
     "preferred": "yan'an",
-    "tags": ["vowel-2nd-a", "yan-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "yan-an"
+    ],
+    "zhuyin": "ㄧㄢ ㄢ"
   },
   {
     "hanzi": "提案",
     "category": "apostrophe",
-    "accepted": ["tian", "ti'an", "t'an"],
+    "accepted": [
+      "tian",
+      "ti'an",
+      "t'an"
+    ],
     "preferred": "ti'an",
-    "tags": ["vowel-2nd-a", "ti-an"],
-    "note": "注意 tian 會被當單音節（天/田），提案必須用 '"
+    "tags": [
+      "vowel-2nd-a",
+      "ti-an"
+    ],
+    "note": "注意 tian 會被當單音節（天/田），提案必須用 '",
+    "zhuyin": "ㄊㄧ ㄢ"
   },
   {
     "hanzi": "文案",
     "category": "apostrophe",
-    "accepted": ["wenan", "wen'an", "w'an", "wen'a"],
+    "accepted": [
+      "wenan",
+      "wen'an",
+      "w'an",
+      "wen'a"
+    ],
     "preferred": "w'an",
-    "tags": ["vowel-2nd-a", "wen-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "wen-an"
+    ],
+    "zhuyin": "ㄨㄣ ㄢ"
   },
   {
     "hanzi": "備案",
     "category": "apostrophe",
-    "accepted": ["beian", "bei'an", "b'an", "bei'a"],
+    "accepted": [
+      "beian",
+      "bei'an",
+      "b'an",
+      "bei'a"
+    ],
     "preferred": "bei'an",
-    "tags": ["vowel-2nd-a", "bei-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "bei-an"
+    ],
+    "zhuyin": "ㄅㄟ ㄢ"
   },
   {
     "hanzi": "保安",
     "category": "apostrophe",
-    "accepted": ["baoan", "bao'an", "b'an", "bao'a"],
+    "accepted": [
+      "baoan",
+      "bao'an",
+      "b'an",
+      "bao'a"
+    ],
     "preferred": "bao'an",
-    "tags": ["vowel-2nd-a", "bao-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "bao-an"
+    ],
+    "zhuyin": "ㄅㄠ ㄢ"
   },
   {
     "hanzi": "國安",
     "category": "apostrophe",
-    "accepted": ["guoan", "guo'an", "g'an", "guo'a"],
+    "accepted": [
+      "guoan",
+      "guo'an",
+      "g'an",
+      "guo'a"
+    ],
     "preferred": "guo'an",
-    "tags": ["vowel-2nd-a", "guo-an"]
+    "tags": [
+      "vowel-2nd-a",
+      "guo-an"
+    ],
+    "zhuyin": "ㄍㄨㄛ ㄢ"
   },
   {
     "hanzi": "北歐",
     "category": "apostrophe",
-    "accepted": ["beiou", "bei'ou", "b'ou", "bei'o"],
+    "accepted": [
+      "beiou",
+      "bei'ou",
+      "b'ou",
+      "bei'o"
+    ],
     "preferred": "bei'ou",
-    "tags": ["vowel-2nd-o", "bei-ou"]
+    "tags": [
+      "vowel-2nd-o",
+      "bei-ou"
+    ],
+    "zhuyin": "ㄅㄟ ㄡ"
   },
   {
     "hanzi": "西歐",
     "category": "apostrophe",
-    "accepted": ["xiou", "xi'ou", "x'ou", "xi'o"],
+    "accepted": [
+      "xiou",
+      "xi'ou",
+      "x'ou",
+      "xi'o"
+    ],
     "preferred": "xi'ou",
-    "tags": ["vowel-2nd-o", "xi-ou"]
+    "tags": [
+      "vowel-2nd-o",
+      "xi-ou"
+    ],
+    "zhuyin": "ㄒㄧ ㄡ"
   },
   {
     "hanzi": "東歐",
     "category": "apostrophe",
-    "accepted": ["dongou", "dong'ou", "d'ou", "dong'o"],
+    "accepted": [
+      "dongou",
+      "dong'ou",
+      "d'ou",
+      "dong'o"
+    ],
     "preferred": "d'ou",
-    "tags": ["vowel-2nd-o", "dong-ou"]
+    "tags": [
+      "vowel-2nd-o",
+      "dong-ou"
+    ],
+    "zhuyin": "ㄉㄨㄥ ㄡ"
   },
   {
     "hanzi": "感恩",
     "category": "apostrophe",
-    "accepted": ["ganen", "gan'en", "g'en", "gan'e"],
+    "accepted": [
+      "ganen",
+      "gan'en",
+      "g'en",
+      "gan'e"
+    ],
     "preferred": "g'en",
-    "tags": ["vowel-2nd-e", "gan-en"]
+    "tags": [
+      "vowel-2nd-e",
+      "gan-en"
+    ],
+    "zhuyin": "ㄍㄢ ㄣ"
   },
   {
     "hanzi": "報恩",
     "category": "apostrophe",
-    "accepted": ["baoen", "bao'en", "b'en", "bao'e"],
+    "accepted": [
+      "baoen",
+      "bao'en",
+      "b'en",
+      "bao'e"
+    ],
     "preferred": "bao'en",
-    "tags": ["vowel-2nd-e", "bao-en"]
+    "tags": [
+      "vowel-2nd-e",
+      "bao-en"
+    ],
+    "zhuyin": "ㄅㄠ ㄣ"
   },
   {
     "hanzi": "嬰兒",
     "category": "apostrophe",
-    "accepted": ["yinger", "ying'er", "y'er", "ying'e"],
+    "accepted": [
+      "yinger",
+      "ying'er",
+      "y'er",
+      "ying'e"
+    ],
     "preferred": "ying'er",
-    "tags": ["vowel-2nd-e", "ying-er"]
+    "tags": [
+      "vowel-2nd-e",
+      "ying-er"
+    ],
+    "zhuyin": "ㄧㄥ ㄦ"
   },
   {
     "hanzi": "幼兒",
     "category": "apostrophe",
-    "accepted": ["youer", "you'er", "y'er", "you'e"],
+    "accepted": [
+      "youer",
+      "you'er",
+      "y'er",
+      "you'e"
+    ],
     "preferred": "you'er",
-    "tags": ["vowel-2nd-e", "you-er"]
+    "tags": [
+      "vowel-2nd-e",
+      "you-er"
+    ],
+    "zhuyin": "ㄧㄡ ㄦ"
   },
   {
     "hanzi": "女兒",
     "category": "apostrophe",
-    "accepted": ["nver", "nv'er", "nver", "nv'e"],
+    "accepted": [
+      "nver",
+      "nv'er",
+      "nver",
+      "nv'e"
+    ],
     "preferred": "nv'er",
-    "tags": ["vowel-2nd-e", "nv-er", "v-key"],
-    "note": "女 用 v 代 ü → nv"
+    "tags": [
+      "vowel-2nd-e",
+      "nv-er",
+      "v-key"
+    ],
+    "note": "女 用 v 代 ü → nv",
+    "zhuyin": "ㄋㄩ ㄦ"
   },
   {
     "hanzi": "蘋果",
     "category": "apostrophe",
-    "accepted": ["pingguo", "pg", "ping'guo"],
+    "accepted": [
+      "pingguo",
+      "pg",
+      "ping'guo"
+    ],
     "preferred": "pg",
-    "tags": ["no-ambiguity", "control"],
-    "note": "對照組：無裸母音邊界，簡拼 pg 最快，不需 '"
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "note": "對照組：無裸母音邊界，簡拼 pg 最快，不需 '",
+    "zhuyin": "ㄆㄧㄥ ㄍㄨㄛ"
   },
   {
     "hanzi": "電腦",
     "category": "apostrophe",
-    "accepted": ["diannao", "dn", "dian'nao"],
+    "accepted": [
+      "diannao",
+      "dn",
+      "dian'nao"
+    ],
     "preferred": "dn",
-    "tags": ["no-ambiguity", "control"]
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "zhuyin": "ㄉㄧㄢ ㄋㄠ"
   },
   {
     "hanzi": "學校",
     "category": "apostrophe",
-    "accepted": ["xuexiao", "xx", "xue'xiao"],
+    "accepted": [
+      "xuexiao",
+      "xx",
+      "xue'xiao"
+    ],
     "preferred": "xx",
-    "tags": ["no-ambiguity", "control"]
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "zhuyin": "ㄒㄩㄝ ㄒㄧㄠ"
   },
   {
     "hanzi": "朋友",
     "category": "apostrophe",
-    "accepted": ["pengyou", "py", "peng'you"],
+    "accepted": [
+      "pengyou",
+      "py",
+      "peng'you"
+    ],
     "preferred": "py",
-    "tags": ["no-ambiguity", "control"]
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "zhuyin": "ㄆㄥ ㄧㄡ"
   },
   {
     "hanzi": "台灣",
     "category": "apostrophe",
-    "accepted": ["taiwan", "tw", "tai'wan"],
+    "accepted": [
+      "taiwan",
+      "tw",
+      "tai'wan"
+    ],
     "preferred": "tw",
-    "tags": ["no-ambiguity", "control"]
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "zhuyin": "ㄊㄞ ㄨㄢ"
   },
   {
     "hanzi": "中國",
     "category": "apostrophe",
-    "accepted": ["zhongguo", "zg", "zhg", "zhong'guo"],
+    "accepted": [
+      "zhongguo",
+      "zg",
+      "zhg",
+      "zhong'guo"
+    ],
     "preferred": "zg",
-    "tags": ["no-ambiguity", "control"]
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "zhuyin": "ㄓㄨㄥ ㄍㄨㄛ"
   },
   {
     "hanzi": "明天",
     "category": "apostrophe",
-    "accepted": ["mingtian", "mt", "ming'tian"],
+    "accepted": [
+      "mingtian",
+      "mt",
+      "ming'tian"
+    ],
     "preferred": "mt",
-    "tags": ["no-ambiguity", "control"]
+    "tags": [
+      "no-ambiguity",
+      "control"
+    ],
+    "zhuyin": "ㄇㄧㄥ ㄊㄧㄢ"
   }
 ]

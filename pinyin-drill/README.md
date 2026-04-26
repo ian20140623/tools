@@ -21,6 +21,7 @@ Mac 拼音練習遊戲 — 針對個人弱點自動加強。 ^ck-dbce32-0
 - `data/seed_nng_chars.json` — n/ng 單字題庫
 - `data/seed_nng_words.json` — n/ng 詞題庫
 - `data/seed_apostrophe.json` — apostrophe 反射詞題庫
+- `scripts/gen_zhuyin.py` — build-time 工具，從 preferred 產 `zhuyin` 欄位（無聲調）
 - `stats.sqlite` — runtime 產生，紀錄每題 {hanzi, category, time_ms, correct, attempt_form} ^ck-cc7415-3
 
 ## 依賴
@@ -48,7 +49,8 @@ python3 drill_nng.py --count 20
 - 輸入 = `preferred` → ✅✨ 滿分（最佳打法）
 - 輸入 ∈ `accepted` 但 ≠ `preferred` → 對，提示更快打法
 - 輸入 ∈ `trap` → ❌ 錯，標記為典型陷阱
-- 其他 → ❌ 錯 ^ck-41c620-9
+- 其他 → ❌ 錯
+- 錯時連帶秀注音對照（v0.1.3+，事後對照用，非輸入鷹架） ^ck-41c620-9
 
 ## 題庫 schema
 

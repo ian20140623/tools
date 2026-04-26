@@ -1,6 +1,34 @@
 # pinyin-drill — 開發記錄
 ^ck-f3d824-0
 
+## 2026-04-26（日）
+
+### [MAC-MINI] v0.1.3 — 錯題加注音對照
+
+**用戶需求**：錯的時候給注音對照（事後對照，不是輸入鷹架）
+
+跟 v0.1.0 砍掉的「全程 zhuyin 鷹架」不同情境：那次是答題前秀注音 → 違反「快速反射」目標；這次只在 wrong 路徑印 → 純錯題復盤，不影響輸入流。
+
+**改動**
+- 新增 `scripts/gen_zhuyin.py` — build-time 工具，從 preferred 推 zhuyin 寫進 JSON
+  - 純標準庫 syllable splitter（greedy longest match）+ hand-curated SYLLABLE_TO_ZHUYIN（80 個 syllable cover 全 121 題）
+  - apostrophe 類從 accepted 含 `'` 的形式拆音節
+  - 無聲調（preferred 本來就無調，且作為對照已足夠）
+  - `--check` 模式只 dry-run 報缺
+- 三份 seed JSON 加 `zhuyin` 欄位（121 筆全填，零 missing）
+- `drill.py` `give_feedback()` wrong 路徑印 `注音 ㄒㄧㄣ`；`print_report()` 錯題列表同步
+- `session_log` 多帶 `zhuyin` 欄位給 report 用
+- VERSION 0.1.2 → 0.1.3
+
+**設計決策**
+- runtime 不引外部依賴（pypinyin 等），維持 README「Python 標準庫」承諾 — zhuyin 是 build-time 預計算
+- 不寫進 stats.sqlite（zhuyin 是顯示資料不是行為資料）
+- preferred 路徑不秀注音（對的就過，注音只在錯時當解釋）
+
+**沒做**
+- 聲調標記（preferred 沒有聲調資訊，加上來自其他來源等於另一個專案）
+- apostrophe 的 jianpin preferred 反推注音（用 accepted 的 fullpin 形式即可，不需 jianpin → 注音 mapping）
+
 ## 2026-04-18（六）
 ^ck-62f562-1
 
