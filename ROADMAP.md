@@ -1,5 +1,5 @@
 # ROADMAP — tools
-^ck-97a6ad-0
+^ck-97a6ad-0 ^ck-0ba9d4-0
 
 ## 痛點
 
@@ -13,7 +13,7 @@
 
 ## 階段目標
 
-- [x] A. espanso — 專案名稱快速輸入（統一由嘸蝦米 liu.box 處理，Espanso 已停用）
+- [x] A. espanso — 專案名稱快速輸入（Windows：無蝦米 liu.box；Mac：espanso match YAML 直接展開，gen_espanso_mac.py，2026-06-08）
 - [x] B. liu-updater — liu.box 時間字根自動更新（年度 + 季度，臨近2季度原則）
 - [ ] C. wifi-keepalive — iPhone 熱點 keep-alive + 斷線自動重連（PowerShell，僅 NB）
 - [ ] D. pinyin-drill — Mac 拼音練習遊戲（Python，Mac mini 本機，純英文輸入判定）

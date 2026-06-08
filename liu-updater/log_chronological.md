@@ -1,8 +1,8 @@
 # Log — liu-updater
-^ck-9a0f97-0
+^ck-9a0f97-0 ^ck-1db083-0
 
 ## 2026-03-17（週二）
-^ck-fd228e-1
+^ck-fd228e-1 ^ck-8e2ce0-1
 
 ### 13:31 [NB] 初版完成 — 年度 + 月份字根
 - 痛點：liu.box 裡的時間字根（LLY/LY/TY/NY/NNY/TM）以前手動更新，放了四年沒改

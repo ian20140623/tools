@@ -1,5 +1,5 @@
 # wifi-keepalive 安裝指南
-^ck-ca6c0f-0
+^ck-ca6c0f-0 ^ck-32f4b0-0
 
 ## 1. 修改 SSID
 

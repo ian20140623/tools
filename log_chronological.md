@@ -1,8 +1,8 @@
 # tools — 開發記錄
-^ck-a77d40-0
+^ck-a77d40-0 ^ck-58c0cc-0
 
 ## 2026-03-17（一）
-^ck-1acc91-1
+^ck-1acc91-1 ^ck-3097b0-1
 
 ### 12:00 [NB] 初始建立 + espanso-projects 工具
 
@@ -37,7 +37,7 @@
 - 一次性清理：刪掉過時的 `TD; TD-SCDMA` 條目 ^ck-7f41b0-5
 
 ## 2026-03-18（三）
-^ck-8754a3-6
+^ck-8754a3-6 ^ck-b4858a-6
 
 ### 12:00 [NB] liu-updater 季度更新
 
@@ -55,7 +55,7 @@
 - 建立 wifi-keepalive/ROADMAP.md：三階段（核心功能 → 穩定運行 → 觀察分析） ^ck-0e1982-8
 
 ## 2026-03-20（五）
-^ck-7aedfb-9
+^ck-7aedfb-9 ^ck-c9bb9a-9
 
 ### 21:58 [DESKTOP] espanso：liu.box 升為 single source of truth
 
@@ -65,7 +65,7 @@
 - 579 筆手動條目 + 24 筆專案 trigger，0 衝突 ^ck-7d9e0c-10
 
 ## 2026-03-21（六）
-^ck-241edf-11
+^ck-241edf-11 ^ck-426794-11
 
 ### 15:22 [DESKTOP] Dropbox 路徑改環境變數 + 首筆共用字串測試
 
@@ -75,7 +75,7 @@
 - 首筆共用字串測試：加入 OBS; Obsidian，確認嘸蝦米和 Espanso 兩邊都生效 ^ck-d2f0cf-12
 
 ## 2026-03-25（二）
-^ck-fdcf62-13
+^ck-fdcf62-13 ^ck-259d30-13
 
 ### 05:50 [DESKTOP] espanso 與嘸蝦米分工：各管各的
 
@@ -95,7 +95,7 @@
   - gen_espanso.py 移除 espanso 產出邏輯（generate_espanso()、import yaml、ESPANSO_MATCH），只更新 liu.box ^ck-a21b87-15
 
 ## 2026-04-18（六）
-^ck-628110-16
+^ck-628110-16 ^ck-3260c6-16
 
 ### 19:15 [MAC-MINI] pinyin-drill v0.1.0 開案（階段目標 D）
 
@@ -129,13 +129,14 @@
 **pinyin-drill 的新定位**：這個 session 走一圈後，pinyin-drill 從「主力工具」降為「備援 + 實驗性小品」。Mac 主力轉注音後使用頻率會降，但作為完整 MVP 保留（跨裝置拼音場景仍有用，例如朋友電腦或舊習慣回補）。 ^ck-26a2c3-17
 
 ## 2026-04-19（日）
-^ck-565ca7-18
+^ck-565ca7-18 ^ck-8f2e17-18
 
 ### 13:30 [MAC-MINI] pinyin-drill v0.1.2 — feedback 視覺化 + 雙軌正確率
 
-錯題改 side-by-side 對照（`你打 [X] → 正解 [Y] (情境)`），每題秀本局/全局正確率，session 結算加 filtered 全局累計。不改核心行為、只改顯示。用戶「故意錯會污染」的疑慮由雙軌透明度滿足，不加 undo/skip（retrieval practice 原則）。詳見 pinyin-drill/log_chronological.md。
+錯題改 side-by-side 對照（`你打 [X] → 正解 [Y] (情境)`），每題秀本局/全局正確率，session 結算加 filtered 全局累計。不改核心行為、只改顯示。用戶「故意錯會污染」的疑慮由雙軌透明度滿足，不加 undo/skip（retrieval practice 原則）。詳見 pinyin-drill/log_chronological.md。 ^ck-7cebe2-19
 
 ## 2026-04-20（一）
+^ck-e9cfe1-20
 
 ### 15:30 [MAC-MINI] pinyin-drill 實測 + n/ng drill 價值框架校準
 
@@ -168,3 +169,7 @@
 ### 13:01 [MAC-MINI] pinyin-drill v0.1.1 — drill_nng.py 聚焦變體
 
 用戶試用超注音期間仍想補拼音 n/ng 知識缺口。加了 `drill_nng.py` 薄包裝，固定 `--category nng-char --strict`，只暴露 count/stats。OCP：不改 drill.py 核心，用 wrapper 擴充聚焦場景。VERSION 0.1.0 → 0.1.1。詳見 pinyin-drill/log_chronological.md。 ^ck-27c8f4-20
+
+### 19:26 [MAC-MINI] espanso 上 Mac — 新增 gen_espanso_mac.py
+
+espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.box、等於沒這功能。用戶決定在 Mac 補回「打 4 字母 + `;` 展開專案名」。`brew install --cask espanso` 裝 2.3.0，新增 `gen_espanso_mac.py`（OCP 重用 gen_espanso.py 掃描邏輯、只換成寫 espanso match YAML），灌 28 專案 trigger 零撞名。最大坑：espanso 在 Mac 必須 GUI 啟動（終端機 nohup 起的 worker 權限歸屬錯、注入靜默失敗），launchd 開機自啟修好。env.machines.md Mac mini Espanso 由 ❌ 改 ✅ 2.3.0。詳見 espanso/log_chronological.md。 ^ck-27c8f4-21

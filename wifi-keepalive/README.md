@@ -10,7 +10,7 @@ iPhone 個人熱點連 Windows 筆電，約 30-60 分鐘會自動斷線（iOS �
 | install.md | Task Scheduler 開機自啟設定 + 裝置管理員網卡設定 |
 | logs/ | 斷線 CSV log（gitignore） |
 | log_chronological.md | 開發記錄 |
-^ck-f60e67-1
+^ck-f60e67-1 ^ck-b33078-1
 
 ## 怎麼跑
 
@@ -32,7 +32,7 @@ powershell -ExecutionPolicy Bypass -File scripts/wifi-keepalive.ps1 ^ck-67fe9b-3
 | $PingTimeoutMs | 2000 | ping 逾時（毫秒） |
 | $FailThreshold | 3 | 連續 ping 失敗幾次才判定斷線 |
 | $LogDir | 腳本同層 ../logs | CSV log 路徑 |
-^ck-99e803-5
+^ck-99e803-5 ^ck-0f9c8d-5
 
 ## 依賴
 

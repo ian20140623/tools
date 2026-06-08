@@ -1,8 +1,8 @@
 # espanso — 開發記錄
-^ck-b6a511-0
+^ck-b6a511-0 ^ck-e5a126-0
 
 ## 2026-03-17（一）
-^ck-bdc1e1-1
+^ck-bdc1e1-1 ^ck-8cbb0c-1
 
 ### 12:00 [NB] 初始建立
 
@@ -43,7 +43,7 @@
 - **撞名規則不變**：如果前 4 字母撞到 liu.box 手動條目，liu.box 跳過、Espanso 照生成 ^ck-16f2eb-5
 
 ## 2026-03-20（五）
-^ck-c78f33-6
+^ck-c78f33-6 ^ck-363914-6
 
 ### 21:58 [DESKTOP] liu.box 升為 single source of truth
 
@@ -59,3 +59,16 @@
 - **問題**：DESKTOP Dropbox 在 `D:\Dropbox`，NB 在 `%USERPROFILE%\Dropbox`，寫死路徑只能在一台跑
 - **解法**：改用 `DROPBOX_PATH` 環境變數，沒設時 fallback 讀 repo 備份
 - **首筆共用字串**：加入 `OBS; Obsidian` 到 liu.box，兩邊都生效 ^ck-5f1d72-8
+
+## 2026-06-08（一）
+
+### 19:26 [MAC-MINI] espanso 上 Mac — gen_espanso_mac.py + 啟動陷阱
+
+- **起因**：espanso 工具從頭到尾只在 Windows 跑過（log 機器標籤全 NB/DESKTOP），Mac 沒有無蝦米接 liu.box，等於 Mac 上沒有「打 4 字母 + `;` 展開專案名」這功能。用戶決定在 Mac 補回來。
+- **方案選擇**：比較過 macOS 原生文字替換 vs espanso。原生免裝、能同步 iPhone，但無腳本批次刪除、要手動拖 .plist 匯入；espanso 要裝但「刪一個檔就乾淨」、跨平台一致。用戶選 espanso。
+- **gen_espanso_mac.py**（OCP）：`import gen_espanso`，重用 `get_projects` / `build_trigger_map`，只新增 espanso YAML output writer，寫到 `~/Library/Application Support/espanso/match/projects.yml`（獨立檔，不碰 base.yml、不碰 liu.box）。trigger 形狀沿用 `know;`。掃出 28 專案、28 trigger、零撞名。
+- **Mac 啟動陷阱（本次最大坑）**：espanso 必須以 GUI App 身份啟動（`open -a Espanso` / `espanso service start`），**不能**從終端機 `nohup espanso worker` 拉。macOS TCC 把輔助使用權限歸給「負責任的父程序」，終端機起的 worker 權限算終端機頭上，注入被靜默擋掉——`espanso match exec` 回 exit 0、worker log 看似正常、字卻打不出來，連測三次「沒反應」才從 GUI 啟動驗證解開。
+- **secure input 干擾**：worker log 一直記 `secure input has been acquired`（espanso 猜 loginwindow，官方說此偵測不可靠），會週期性讓監聽瞎掉。本次非主因，但記錄備查。
+- **launchd 開機自啟**：中途被 `pkill` 打斷 register/start 流程，殘留 `launchctl exit 3`。乾淨 `service unregister` → `register` → `service start` 一輪修好，launchctl list 出現正規 `com.federicoterzi.espanso` job，plist `RunAtLoad=true`。
+- **自訂字串**：示範加 `proj; → projects` 到 base.yml，espanso 自動偵測即時重載，不需重啟。
+- **教訓**：「終端機起的 GUI 工具權限歸屬不對」是 macOS 通則，不限 espanso；以後 Mac 上裝需要輔助使用/螢幕錄製權限的工具，一律 GUI 啟動驗證，別用終端機 nohup 判生死。 ^ck-mac-espanso-1

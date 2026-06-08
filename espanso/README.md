@@ -10,7 +10,7 @@
 | `scripts/gen_espanso.py` | 掃 ClaudeProjects/ 生成 Espanso config + 更新 liu.box |
 | `scripts/start_espanso.bat` | 開機啟動：先更新 triggers 再啟動 Espanso |
 | `liu.box` | 無蝦米自定義字典(與 Dropbox 雙向同步) |
-^ck-999723-1
+^ck-999723-1 ^ck-fa5c93-1
 
 ### 每個專案一個 trigger
 
@@ -54,9 +54,28 @@ espanso restart
 
 開機時 `scripts/start_espanso.bat` 會自動跑。 ^ck-fbf4ea-5
 
+### Mac 版（espanso 直接展開，不經無蝦米）
+
+Windows 用無蝦米接 liu.box；Mac 沒無蝦米，改讓 espanso 自己展開專案名。
+
+- `scripts/gen_espanso_mac.py` — 掃 `~/Projects/` 生成 espanso match YAML（重用 `gen_espanso.py` 的掃描 + trigger 邏輯，只換 output writer）
+- 輸出：`~/Library/Application Support/espanso/match/projects.yml`（獨立檔，不碰 `base.yml`）
+- trigger 形狀沿用 Windows：前 4 字母 + `;`（例 `know;` → `knowledge-system`）
+- 自訂字串（email、簽名等）手動加在 `base.yml`，跑 `espanso edit` 編輯即可
+
+更新 triggers（新增專案資料夾後）：
+
+```bash
+cd ~/Projects/tools/espanso/scripts && python3 gen_espanso_mac.py
+```
+
+**⚠️ Mac 啟動陷阱**：espanso 必須以 GUI App 身份啟動（`open -a Espanso` 或 `espanso service start`），**不能**從終端機 `espanso worker` 拉起來——後者 macOS 把輔助使用權限歸給終端機，注入會被靜默擋掉（worker log 看似正常、字卻打不出來）。開機自啟靠 `espanso service register`（寫 `~/Library/LaunchAgents` plist，`RunAtLoad=true`）。
+
 ### 依賴
 
-- [Espanso](https://espanso.org/) v2.3+(`winget install Espanso.Espanso`)
+- [Espanso](https://espanso.org/) v2.3+
+  - Windows：`winget install Espanso.Espanso`
+  - Mac：`brew install --cask espanso`，首跑需到 系統設定 → 隱私權與安全性 → 輔助使用 開啟 Espanso
 - Python + pyyaml ^ck-127f40-6
 
 ### 安裝紀錄

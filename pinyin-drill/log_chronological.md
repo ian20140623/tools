@@ -1,7 +1,8 @@
 # pinyin-drill — 開發記錄
-^ck-f3d824-0
+^ck-f3d824-0 ^ck-5f4153-0
 
 ## 2026-04-26（日）
+^ck-6a5857-1
 
 ### [MAC-MINI] v0.1.3 — 錯題加注音對照
 
@@ -27,10 +28,10 @@
 
 **沒做**
 - 聲調標記（preferred 沒有聲調資訊，加上來自其他來源等於另一個專案）
-- apostrophe 的 jianpin preferred 反推注音（用 accepted 的 fullpin 形式即可，不需 jianpin → 注音 mapping）
+- apostrophe 的 jianpin preferred 反推注音（用 accepted 的 fullpin 形式即可，不需 jianpin → 注音 mapping） ^ck-a59d82-2
 
 ## 2026-04-18（六）
-^ck-62f562-1
+^ck-62f562-1 ^ck-67bcfb-3
 
 ### 16:20 [MAC-MINI] 開案：Mac 拼音練習遊戲
 
@@ -99,7 +100,7 @@
 - 立即重抽錯題（肌肉記憶 immediate correction 機制，留給 v0.1.1+） ^ck-b2bf6c-3
 
 ## 2026-04-19（日）
-^ck-60deaf-4
+^ck-60deaf-4 ^ck-9b1fc7-6
 
 ### 13:30 [MAC-MINI] v0.1.2 改善回饋與統計視覺化（tag 覆寫兩次）
 

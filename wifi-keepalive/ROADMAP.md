@@ -1,5 +1,5 @@
 # ROADMAP — wifi-keepalive
-^ck-c0c1f2-0
+^ck-c0c1f2-0 ^ck-8a06fe-0
 
 ## 痛點
 
