@@ -1,2 +1,5 @@
 .claude/
 __pycache__/
+
+# WORKTREE_GUIDE Ver 2.0
+.worktree/
