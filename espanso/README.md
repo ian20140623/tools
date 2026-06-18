@@ -61,7 +61,7 @@ Windows 用無蝦米接 liu.box；Mac 沒無蝦米，改讓 espanso 自己展開
 - `scripts/gen_espanso_mac.py` — 掃 `~/Projects/` 生成 espanso match YAML（重用 `gen_espanso.py` 的掃描 + trigger 邏輯，只換 output writer）
 - 輸出：`~/Library/Application Support/espanso/match/projects.yml`（獨立檔，不碰 `base.yml`）
 - trigger 形狀沿用 Windows：前 4 字母 + `;`（例 `know;` → `knowledge-system`）
-- 自訂字串（email、簽名等）手動加在 `base.yml`，跑 `espanso edit` 編輯即可
+- 自訂字串（email、簽名等）加在 `base.yml`（已納入版控、見下方「跨機同步」），跑 `espanso edit` 編輯即可
 
 更新 triggers（新增專案資料夾後）：
 
@@ -77,6 +77,26 @@ launchctl enable gui/$(id -u)/com.federicoterzi.espanso
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.federicoterzi.espanso.plist
 ```
 enable 後 bootstrap exit=0、`espanso status` = running、`launchctl list | grep espanso` 看得到 PID。首裝完整流程：`open -a Espanso`（觸發輔助使用權限 wizard）→ 系統設定授權 → 上述 enable + bootstrap 註冊自啟。
+
+### Mac 跨機同步（symlink 進 repo）
+
+espanso **不會自己跨機同步**。為了兩台 Mac 共用一份自訂設定，把可攜的設定檔納入 repo、live 目錄用 symlink 指過去：
+
+- `mac-config/match/base.yml` — 自訂縮寫（email / 簽名 / 個人 abbreviation），**跨機共用、進 repo**
+- `mac-config/config/default.yml` — 全域設定（toggle key / backend），**跨機共用、進 repo**
+- `match/projects.yml` — 專案 triggers，**不進 repo**：每台各自 `gen_espanso_mac.py` 生成（內容依本機 `~/Projects/` 資料夾而定）
+
+live 目錄的 symlink（裝好後一次性建立）：
+
+```bash
+REPO=~/Projects/tools/espanso/mac-config
+LIVE=~/Library/Application\ Support/espanso
+ln -sf "$REPO/match/base.yml"     "$LIVE/match/base.yml"
+ln -sf "$REPO/config/default.yml" "$LIVE/config/default.yml"
+espanso restart
+```
+
+**⚠️ 新機器 onboarding gate（防覆蓋）**：若該機 live `base.yml` **已有自訂內容**，symlink 前先 `cat` 出來、把自訂縮寫**併進** repo 版再建 symlink，否則 symlink 會用 repo 版覆蓋掉本機自訂。先 `git pull` 不會動到 live 檔（symlink 尚未建立前 live 獨立），安全。
 
 ### 依賴
 
