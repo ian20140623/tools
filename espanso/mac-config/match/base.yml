@@ -37,7 +37,7 @@ matches:
     replace: "projects"
 
   - trigger: "cdpj;"
-    replace: "cd projects"
+    replace: "cd ~/Projects"
 
   # ── espanso 預設範例（保留）──
   # Simple text replacement
