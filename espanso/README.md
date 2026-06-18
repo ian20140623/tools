@@ -71,6 +71,13 @@ cd ~/Projects/tools/espanso/scripts && python3 gen_espanso_mac.py
 
 **⚠️ Mac 啟動陷阱**：espanso 必須以 GUI App 身份啟動（`open -a Espanso` 或 `espanso service start`），**不能**從終端機 `espanso worker` 拉起來——後者 macOS 把輔助使用權限歸給終端機，注入會被靜默擋掉（worker log 看似正常、字卻打不出來）。開機自啟靠 `espanso service register`（寫 `~/Library/LaunchAgents` plist，`RunAtLoad=true`）。
 
+**⚠️ Mac 啟動陷阱 2（launchctl EIO，macOS 26 Tahoe 實測，2026-06-17 Air）**：`espanso service register` 成功後，`espanso service start` / `launchctl bootstrap` 可能撞 `Bootstrap failed: 5: Input/output error`（errno 5 EIO），launchd 根本沒 exec（`/tmp/espanso.err` 空）。根因是服務被留在 **disabled** 狀態（前面失敗的 start 嘗試造成）。解法：bootstrap 前先 enable——
+```bash
+launchctl enable gui/$(id -u)/com.federicoterzi.espanso
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.federicoterzi.espanso.plist
+```
+enable 後 bootstrap exit=0、`espanso status` = running、`launchctl list | grep espanso` 看得到 PID。首裝完整流程：`open -a Espanso`（觸發輔助使用權限 wizard）→ 系統設定授權 → 上述 enable + bootstrap 註冊自啟。
+
 ### 依賴
 
 - [Espanso](https://espanso.org/) v2.3+

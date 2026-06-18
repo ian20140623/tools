@@ -173,3 +173,13 @@
 ### 19:26 [MAC-MINI] espanso 上 Mac — 新增 gen_espanso_mac.py
 
 espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.box、等於沒這功能。用戶決定在 Mac 補回「打 4 字母 + `;` 展開專案名」。`brew install --cask espanso` 裝 2.3.0，新增 `gen_espanso_mac.py`（OCP 重用 gen_espanso.py 掃描邏輯、只換成寫 espanso match YAML），灌 28 專案 trigger 零撞名。最大坑：espanso 在 Mac 必須 GUI 啟動（終端機 nohup 起的 worker 權限歸屬錯、注入靜默失敗），launchd 開機自啟修好。env.machines.md Mac mini Espanso 由 ❌ 改 ✅ 2.3.0。詳見 espanso/log_chronological.md。 ^ck-27c8f4-21
+
+## 2026-06-18（四）
+
+### 09:00 [Air] espanso 補裝上 Air + 自訂 tmux/cd trigger
+
+- **why**：四台機器只剩 Air（外出機）沒裝 espanso，專案名展開功能缺一台。env.machines.md Air 待辦本就掛著「如外出需要再裝」。
+- **裝法**：`brew install --cask espanso` 2.3.0 → `gen_espanso_mac.py` 生成 26 專案 trigger（projects.yml）→ `open -a Espanso` 觸發輔助使用權限 wizard、用戶手動授權 → launchd 註冊自啟。
+- **新坑（macOS 26 Tahoe）**：mini 當初沒撞到的——`espanso service start` / `launchctl bootstrap` 撞 `Bootstrap failed: 5: Input/output error`（errno 5 EIO），launchd 沒 exec（/tmp/espanso.err 空）。根因是服務被前面失敗的 start 留在 **disabled** 狀態。解法：bootstrap 前先 `launchctl enable gui/$(id -u)/com.federicoterzi.espanso`，enable 後 bootstrap exit=0、`launchctl list` 看得到 PID。已寫進 espanso/README.md「Mac 啟動陷阱 2」。
+- **自訂 trigger**（手動加在 `base.yml`，不在版控、僅 Air 本機）：`cl;`→`claude`、`tmls;`→`tmux ls`、`tmat;`→`tmux attach -t `、`tmne;`→`tmux new -s `、`tmre;`→`tmux rename-session -t `、`tmki;`→`tmux kill-session -t `、`cdjp;`→`cd ~/Projects`。
+- env.machines.md Air 段 Espanso ❌ → ✅ 2.3.0、待辦勾選。詳見 espanso/README.md。
