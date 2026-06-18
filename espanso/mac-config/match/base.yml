@@ -36,6 +36,9 @@ matches:
   - trigger: "proj;"
     replace: "projects"
 
+  - trigger: "cdpj;"
+    replace: "cd projects"
+
   # ── espanso 預設範例（保留）──
   # Simple text replacement
   - trigger: ":espanso"
