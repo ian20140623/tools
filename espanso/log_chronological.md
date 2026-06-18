@@ -72,3 +72,13 @@
 - **launchd 開機自啟**：中途被 `pkill` 打斷 register/start 流程，殘留 `launchctl exit 3`。乾淨 `service unregister` → `register` → `service start` 一輪修好，launchctl list 出現正規 `com.federicoterzi.espanso` job，plist `RunAtLoad=true`。
 - **自訂字串**：示範加 `proj; → projects` 到 base.yml，espanso 自動偵測即時重載，不需重啟。
 - **教訓**：「終端機起的 GUI 工具權限歸屬不對」是 macOS 通則，不限 espanso；以後 Mac 上裝需要輔助使用/螢幕錄製權限的工具，一律 GUI 啟動驗證，別用終端機 nohup 判生死。 ^ck-mac-espanso-1
+
+## 2026-06-18（四）
+
+### 07:30 [MAC-MINI] 系統重裝後 espanso 還原 + 跨機設定納入版控
+
+- **起因**：開 session 查 espanso 狀態 → binary / cask / app / config dir 全空。對照記錄發現 6/14 Mac mini 系統當機完全重裝，brew cask + 設定被抹掉、env.machines.md 那行還停在重裝前 `✅ 2.3.0` 沒同步現實（drift）。先查證（which / brew list / app bundle / caskroom / launchagent 五項全空）再下結論，沒腦補。
+- **還原六步**：(1) `brew install --cask espanso` 2.3.0 → (2) 用戶 GUI 授輔助使用 → (3) `open -a Espanso` GUI 啟動（守 6/08 那條陷阱、process 確認來自 `/Applications/Espanso.app` 非終端機 worker）→ (4) `gen_espanso_mac.py` 重生 29 triggers（`line;` 撞名跳過）→ (5) `espanso service register` 開機自啟 → (6) env.machines.md 補重裝註記。
+- **跨機同步（本次新增、用戶要求「進repo」）**：espanso 不會自己跨機同步、設定原本沒走 Dropbox/git。新增 `mac-config/{match/base.yml, config/default.yml}` 進 repo、live 目錄改 symlink 指過去；`projects.yml` 維持各機 `gen_espanso_mac.py` 本機生成不進 repo（內容依本機資料夾而定）。espanso restart 透過 symlink 讀取正常。
+- **防覆蓋 gate（重要）**：repo 現存 base.yml 是 Mini 原廠空檔。Air 端 onboarding 時若 live base.yml 已有自訂縮寫，**必須先 cat 併進 repo 版再 symlink**，否則 Mini 空檔會覆蓋 Air 自訂。先 `git pull` 不動 live 檔（symlink 未建前 live 獨立）故安全。README 已記此 gate。
+- **待確認**：用戶 Air 上是否真有自訂 base.yml 內容（決定 repo base.yml 該以哪台為 source of truth）。 ^ck-mac-espanso-restore-1
