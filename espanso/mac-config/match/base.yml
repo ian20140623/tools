@@ -33,6 +33,9 @@ matches:
   - trigger: "cdjp;"
     replace: "cd ~/Projects"
 
+  - trigger: "proj;"
+    replace: "projects"
+
   # ── espanso 預設範例（保留）──
   # Simple text replacement
   - trigger: ":espanso"
