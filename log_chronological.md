@@ -185,3 +185,13 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - **踩到的坑（記給未來）**：(1) GUI 啟動的 espanso **不能跑 `espanso restart`**——會走 launchd 服務路徑、反把 worker 弄死，改 base.yml 後靠 auto-reload 或 `open -a Espanso` 重載；(2)「專案名沒反應」= 注入/偵測權限問題，macOS 需**兩個**權限：輔助使用（注入）+ 輸入監控（偵測鍵盤），少了輸入監控會「match list 正常但打不出字」，GUI 重啟 + 補權限解決。
 - **撞車 + 採 mini 同步架構**：本 session 結 commit 時撞 diverged——mini 今早 08:00 同步段做了「espanso 重裝還原 + 設定納入版控」，新增 `mac-config/{match/base.yml,config/default.yml}` 進 repo + live 目錄 symlink + README 同步段 + Air onboarding 防覆蓋 gate。用戶拍板採 mini 架構。處理：merge origin（README 兩段並存：我的「啟動陷阱 2」+ mini「跨機同步」；env.machines.md 不同行 auto-merge）→ 把 7 個自訂 trigger 加進 repo `mac-config/match/base.yml`（原 stock，零覆蓋 mini）→ 照 gate 驗 live 7 trigger 全進 repo（備份 `/tmp/air_live_base.yml.bak_20260618`）→ Air live `base.yml`/`default.yml` 改 symlink 指 repo。**以後自訂縮寫統一改 repo `mac-config/match/base.yml`、git 跨機同步**。
 - env.machines.md Air 段 Espanso ❌ → ✅ 2.3.0、待辦勾選。詳見 espanso/README.md「Mac 跨機同步」。
+
+## 2026-06-19（五）
+
+### 09:17 [MAC-MINI] espanso 套用 Air 設定 — 跨機同步鏈端到端驗證
+
+- **why**：用戶問「espanso 是不是可以更新至 Air 的設定」。本機 live `base.yml`/`default.yml` 是 symlink 指向 repo `mac-config/`，所以 `git pull`（帶入 Air 6/18 commit `c102790` 等）後設定**檔案內容已自動到位**，只差讓跑著的 daemon 重載。
+- **動作**：`espanso restart` 套用。Air 的全套縮寫（`cl;`→claude、`tmls;`/`tmat;`/`tmne;`/`tmre;`/`tmki;` tmux 系列、`cdpj;`/`cdjp;`→cd ~/Projects、`proj;`→projects）已生效。
+- **跨機架構驗證**：證實「Air 改 repo `mac-config/match/base.yml` → push → mini `git pull` → symlink 自動帶內容 → reload」這條跨機同步鏈端到端通。
+- **澄清 footgun 機器差異**：Air log 記「GUI 啟動的 espanso 不能跑 `espanso restart` 會弄死 worker」——本機實測 `espanso restart` 安全（worker `--monitor-daemon` 存活、match list 正常載入），因 **mini 走 launchd agent 自啟**（restart 走正規路徑），跟 Air **純 GUI 啟動**不同。該坑是 GUI-launched 機器 specific，非全 Mac。
+- 無檔案變更（設定走 pull + symlink、restart 是 runtime），本筆為 log-only commit 留跨機軌跡。
