@@ -22,4 +22,5 @@
 | [wifi-keepalive/](wifi-keepalive/) | iPhone 熱點 keep-alive + 斷線自動重連（PowerShell） |
 | [pinyin-drill/](pinyin-drill/) | Mac 拼音練習遊戲（apostrophe 反射 + n/ng 辨識，弱點自動加強） |
 | [cc/](cc/) | `cco` — 手機一鍵在指定 repo 開 tmux session + 自動 open-session，attach 即遠端遙控 |
+| [tmux/](tmux/) | 跨機共用 tmux 設定範本（prefix 改 `C-a`），手動抄寫同步 |
 ^ck-507d2c-2 ^ck-2f59d3-2

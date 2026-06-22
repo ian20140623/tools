@@ -205,3 +205,10 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - **關鍵決策（why）**：Sir 釐清「開了交給 app 內 RC 操控就好」→ 主路徑是**只開不 attach**。實作為「沒 TTY 自動只開」（iOS 捷徑 / 非互動 ssh 不會卡 attach）+ 顯式 `-o`。配 iOS 捷徑「透過 SSH 執行指令」action 即可無終端機一鍵開 session。
 - **踩坑**：(1) `cc` 撞系統 C 編譯器 → 改 `cco`；(2) 全形括號 `（` 緊貼 `$repo`/`$name` 被 bash 吃進變數名 → unbound，改 `${...}`，事後 grep 全檔掃淨；(3) tmux `=` 精確比對只能用在 session target，pane target（send-keys/attach）要 plain name。
 - **驗證**：新建+open-session 實跑（capture-pane 確認 claude 起來）、idempotent attach、`-o` 只開、`-k` kill 全綠。無新外部依賴（tmux+claude 既有），env.machines.md 不動。
+
+### 11:55 [Mac mini] tmux 工具開案 — prefix 改 C-a，跨機手動同步
+
+- **痛點**：tmux 預設 prefix `C-b` 不順手，想全機統一 `C-a`。
+- **方案決定**：討論過 SSH 一鍵推 / symlink / source 範本，Sir 拍「簡單就好、各機手動改」→ 不做自動部署。repo 放 `tmux/tmux.shared.conf` 當抄寫範本（`unbind C-b` / `set -g prefix C-a` / `bind C-a send-prefix`），各機自己貼進 `~/.tmux.conf` + `tmux source-file` reload。各機 conf 仍各自獨立，範本只管共用部分。
+- **取捨**：prefix 改 `C-a` 後 shell `Ctrl-a`（跳行首）被 tmux 攔截，要送字面需連按兩次（send-prefix）。Sir 已知仍選 `C-a`。
+- **已套用**：Mac mini ✅（`tmux show -g prefix` = `prefix C-a`）。Air / NB 待手動套。無新外部依賴，env.machines.md 不動。
