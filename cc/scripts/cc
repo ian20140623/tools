@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# cc — 手機友善：在指定 repo 開/接 tmux session + 自動跑 open-session
+#
+# 用法:
+#   cc                      列出執行中的 session + 可用 repo
+#   cc <repo>               在 ~/Projects/<repo> 開/接名為 <repo> 的 session
+#   cc <repo> <name>        同上但自訂 session 名（一個 repo 多 session）
+#   cc -k <name>            kill 指定 session
+#
+# 設計：新建 session 時自動以 `claude "/open-session"` 開場，attach 後即可遙控。
+# 已存在同名 session → 直接 attach（不重開、不重跑 open-session）。
+set -euo pipefail
+
+PROJECTS="$HOME/Projects"
+
+repos() { ls -1 "$PROJECTS" 2>/dev/null | tr '\n' ' '; }
+
+sessions() {
+  if tmux ls >/dev/null 2>&1; then
+    tmux ls 2>/dev/null | sed 's/^/  /'
+  else
+    echo "  (無執行中的 tmux session)"
+  fi
+}
+
+# --- 無參數：狀態總覽 ---------------------------------------------------------
+if [ $# -eq 0 ]; then
+  echo "● 執行中的 session:"
+  sessions
+  echo
+  echo "用法: cc <repo> [session-name]   |   cc -k <name> 收掉"
+  echo "  repo: $(repos)"
+  exit 0
+fi
+
+# --- kill ---------------------------------------------------------------------
+if [ "$1" = "-k" ]; then
+  name="${2:?用法: cc -k <session-name>}"
+  tmux kill-session -t "=$name" 2>/dev/null \
+    && echo "✗ 收掉 session: $name" \
+    || echo "（沒有名為 $name 的 session）"
+  exit 0
+fi
+
+# --- open-only 旗標 -----------------------------------------------------------
+# -o / --open：只建好 session（claude + open-session 跑起來）就回報，不 attach。
+# 用於 iOS 捷徑 / 非互動 SSH / 由 app 內 RC 接手操控的情境。
+open_only=0
+if [ "$1" = "-o" ] || [ "$1" = "--open" ]; then
+  open_only=1
+  shift
+fi
+
+# --- 開 / 接 ------------------------------------------------------------------
+repo="${1:?用法: cco [-o] <repo> [session-name]}"
+name="${2:-$repo}"
+dir="$PROJECTS/$repo"
+
+if [ ! -d "$dir" ]; then
+  echo "✗ repo 不存在: $repo"
+  echo "  可用: $(repos)"
+  exit 1
+fi
+
+if tmux has-session -t "=$name" 2>/dev/null; then
+  echo "↻ attach 既有 session: $name"
+else
+  echo "✦ 新建 session: ${name} @ ${repo}（自動跑 open-session）"
+  tmux new-session -d -s "$name" -c "$dir"
+  tmux send-keys -t "$name" 'claude "/open-session"' C-m
+fi
+
+# 只開不接：顯式 -o，或沒有 TTY（iOS 捷徑 / 非互動 ssh）→ 開完即回報
+if [ "$open_only" = 1 ] || [ ! -t 1 ]; then
+  echo "✓ session 就緒: ${name}（未 attach；用終端機 app / RC 接手操控）"
+  exit 0
+fi
+
+# 已在 tmux 內 → switch；否則 attach（exec 讓 ssh -t 直接接管 TTY）
+if [ -n "${TMUX:-}" ]; then
+  exec tmux switch-client -t "$name"
+else
+  exec tmux attach-session -t "$name"
+fi

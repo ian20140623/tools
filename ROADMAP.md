@@ -22,6 +22,10 @@
   - 三類題：apostrophe 反射（詞）、n/ng 辨識（字）、n/ng 辨識（詞）
   - 核心機制：時間也當弱點訊號（對但慢 → 加權重出），per-tag 追蹤最弱類型
   - 技術：Python 3.14 標準庫（sqlite3 + json + time）、ANSI CLI，無外部依賴 ^ck-1c3b69-3
+- [x] E. cco — 手機一鍵開 repo session（bash + tmux，Mac mini，2026-06-20）
+  - 痛點：人在手機上用 SSH 進 mini，不想小螢幕手打 `tmux new -s … -c …` + 起 claude + 跑 open-session
+  - 設計：`cco <repo> [name]` create-or-attach tmux + 自動 `claude "/open-session"`；idempotent，`cco`/`cco -k` 輔助
+  - 手機端零打字靠 SSH app snippet / host 啟動指令 / Apple Shortcuts（待定 app 給確切設定）
 
 ## Incubator
 

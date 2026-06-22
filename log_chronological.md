@@ -195,3 +195,13 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - **跨機架構驗證**：證實「Air 改 repo `mac-config/match/base.yml` → push → mini `git pull` → symlink 自動帶內容 → reload」這條跨機同步鏈端到端通。
 - **澄清 footgun 機器差異**：Air log 記「GUI 啟動的 espanso 不能跑 `espanso restart` 會弄死 worker」——本機實測 `espanso restart` 安全（worker `--monitor-daemon` 存活、match list 正常載入），因 **mini 走 launchd agent 自啟**（restart 走正規路徑），跟 Air **純 GUI 啟動**不同。該坑是 GUI-launched 機器 specific，非全 Mac。
 - 無檔案變更（設定走 pull + symlink、restart 是 runtime），本筆為 log-only commit 留跨機軌跡。
+
+## 2026-06-22（一）
+
+### 11:00 [Mac mini] cco v0.1.0 — 手機一鍵在指定 repo 開 tmux session
+
+- **痛點**：人在手機上用 SSH 進 mini 開工，不想小螢幕手打 `tmux new -s <name> -c ~/Projects/<repo>` + 起 claude + 跑 open-session。要「批次執行、最少打字」。
+- **方案**：bash 腳本 `cc`（symlink `cco`），`cco <repo> [name]` create-or-attach tmux + 自動 `claude "/open-session"`；`cco`（總覽）/ `cco -o`（只開不 attach）/ `cco -k`（收掉）。裝在 `/opt/homebrew/bin/cco`（免 sudo、互動 shell PATH 第一順位）。
+- **關鍵決策（why）**：Sir 釐清「開了交給 app 內 RC 操控就好」→ 主路徑是**只開不 attach**。實作為「沒 TTY 自動只開」（iOS 捷徑 / 非互動 ssh 不會卡 attach）+ 顯式 `-o`。配 iOS 捷徑「透過 SSH 執行指令」action 即可無終端機一鍵開 session。
+- **踩坑**：(1) `cc` 撞系統 C 編譯器 → 改 `cco`；(2) 全形括號 `（` 緊貼 `$repo`/`$name` 被 bash 吃進變數名 → unbound，改 `${...}`，事後 grep 全檔掃淨；(3) tmux `=` 精確比對只能用在 session target，pane target（send-keys/attach）要 plain name。
+- **驗證**：新建+open-session 實跑（capture-pane 確認 claude 起來）、idempotent attach、`-o` 只開、`-k` kill 全綠。無新外部依賴（tmux+claude 既有），env.machines.md 不動。
