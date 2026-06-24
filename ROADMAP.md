@@ -26,6 +26,12 @@
   - 痛點：人在手機上用 SSH 進 mini，不想小螢幕手打 `tmux new -s … -c …` + 起 claude + 跑 open-session
   - 設計：`cco <repo> [name]` create-or-attach tmux + 自動 `claude "/open-session"`；idempotent，`cco`/`cco -k` 輔助
   - 手機端零打字靠 SSH app snippet / host 啟動指令 / Apple Shortcuts（待定 app 給確切設定）
+- [x] F. ocr-clip — 截圖 OCR 換剪貼簿（Swift + Vision，Mac mini，2026-06-24）
+  - 痛點：終端指令截圖，超長字串（token/hash/URL）在螢幕上被硬折成多行，貼出來帶假換行
+  - 設計：剪貼簿圖 → Vision OCR（離線、`usesLanguageCorrection=false` 照抄不修正）→ 座標拆換行 → 原地換回剪貼簿
+  - 拆換行：行右緣 maxX≥0.92 視為螢幕硬折→接上一行；沒到底→真換行
+  - 熱鍵 ⌘⇧2：無 Hammerspoon/skhd，用系統「捷徑」綁 Run Shell（一次性 GUI 設定）
+  - 技術：Swift 6.3.2 + Vision framework，二進位 gitignore，換機跑 build.sh
 
 ## Incubator
 
@@ -36,4 +42,4 @@
 
 ## 現況
 
-A、B 完成。C 建置中（腳本完成，待實測）。D 開案中（Mac mini 本機小工具，跟其他專案無連動）。tools 基礎建設(README 規則、CLAUDE.md 流程、ROADMAP)已建立。liu.box 已備份進 repo。 ^ck-3c8342-5
+A、B、E、F 完成。C 建置中（腳本完成，待實測）。D 開案中（Mac mini 本機小工具，跟其他專案無連動）。tools 基礎建設(README 規則、CLAUDE.md 流程、ROADMAP)已建立。liu.box 已備份進 repo。 ^ck-3c8342-5

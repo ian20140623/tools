@@ -1,0 +1,3 @@
+# 編譯產物（換機跑 scripts/build.sh 重建）
+/ocr_clip
+scripts/scratch/make_test_image
