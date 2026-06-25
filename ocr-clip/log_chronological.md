@@ -12,3 +12,9 @@
 - 熱鍵：機器無 Hammerspoon/skhd，用系統「捷徑」綁 ⌘⇧2 當觸發殼（零依賴）。core 是 Swift binary，捷徑只是殼。
 - 實測：自製測試圖（line1 撐到右緣 + line2 續行 + line3 獨立指令）→ ocr_clip 正確把 line1+line2 黏成一行、line3 保留新行，剪貼簿原地換成文字。端到端通過。
 - 環境：Swift 6.3.2（Command Line Tools）；macOS 26.5.1。二進位 gitignore，換機跑 `bash scripts/build.sh`。
+
+### 09:55 [Air] 安裝上 Air — git pull 帶原始碼、本機 build + 綁 ⌘⇧2
+- open-session 的 git pull 帶入 mini 的 `89f5166` 原始碼；binary gitignore 不同步，`bash scripts/build.sh` 用 Air 的 `swiftc` 6.3.1 本機編出 `ocr_clip`（89K）。
+- 實測：剪貼簿原有截圖被正確 OCR、dewrap 折行接對、寫回剪貼簿。
+- 熱鍵：用「捷徑」App 建 `OCR Clipboard`（執行 Shell 指令 → binary 絕對路徑）綁 ⌘⇧2，捷徑無存檔鈕、關視窗自動存。
+- 無新外部依賴（swiftc 既有），env.machines.md 不動。README「已套用」加 Air ✅。

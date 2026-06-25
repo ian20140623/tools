@@ -6,7 +6,7 @@
 - **照抄不修正**：`usesLanguageCorrection = false`，不會把 `ls -la`、base64、旗標「修正」成自然語言。
 - **繁中 + 英文**：`recognitionLanguages = ["zh-Hant", "en-US"]`（順序=優先權）。中文無空格，跟「折行直接接上不插分隔」天生相容。
   - 注意：開中文後 Vision 在中文模式偶爾把半形標點吐成全形（`:`→`：`、`()`→`（）`），純中文無感，但**純終端指令截圖**遇到時可能貼出去跑不動。真實清晰截圖通常不會發生；若常踩可再加「終端模式」旗標把全形標點轉回半形。
-- **平台**：macOS（需 Swift 工具鏈編譯）。Mac mini 本機工具。
+- **平台**：macOS（需 Swift 工具鏈編譯）。已套用：Mac mini ✅、Air ✅（各機 `git pull` 後跑一次 `build.sh` 編本機二進位，binary 不進版控）。
 
 ## 聰明拆換行（dewrap）
 
