@@ -1,6 +1,7 @@
-# tmux — 跨機共用設定
+# tmuxsync — 跨機共用 tmux 設定
 
 跨機器一致的 tmux 設定。**手動同步**：每台機器自己抄 + reload，不做 SSH / symlink / 自動部署。
+（名稱 tmuxsync = tmux 設定的跨機同步；目前同步動作是手動抄寫範本，非自動部署。）
 
 ## 內容
 
@@ -26,5 +27,5 @@
 ## 已套用機器
 
 - ✅ Mac mini（2026-06-22）
-- ⬜ Air
-- ⬜ NB
+- ✅ Air（2026-06-23）
+- — NB（退役中 Windows，tmux 不適用，不納入）
