@@ -31,3 +31,15 @@ bind C-a send-prefix
 **設定**（加 1 行）：`bind -n C-o choose-tree -Zw`（沿用原 `prefix w` 行為）。
 
 **驗證**：Air live `~/.tmux.conf` 加同行 → `tmux source-file` reload → `list-keys -T root` 確認 `C-o → choose-tree -Zw` 已註冊。VS Code 終端若攔 Ctrl 鍵再議。
+
+### 2026-06-29 [Air] 更正：C-o 撞 Claude Code，改 `C-\`
+
+**問題**：C-o 上線後 Sir 回報「沒用」+「Claude Code 本來就用很多 Ctrl+o」。
+
+**兩個根因**：
+1. **Claude Code 佔用 Ctrl+o** — Sir 在 tmux pane 裡也跑 claude，`bind -n C-o` 會把 Ctrl+o 從 claude 手上搶走，不能用。要留給 claude。
+2. **「沒用」很可能是測錯地方** — tmux 綁定只在 tmux pane 內有效。Sir 多半在「VS Code 的 Claude Code 視窗」（非 tmux pane，`TMUX` 為空）按的 → tmux 管不到 → 鍵直接給 claude，看起來像「claude 在用 Ctrl+o」。教訓記下：tmux 鍵要在**真 tmux pane** 內測。
+
+**改鍵**：Sir 從 prefix→Ctrl+w（2 鍵 bulletproof）/ F9 / `C-\` 選 **`C-\`**（真單鍵、claude 與 mac 版 VS Code 都沒佔、Ctrl 系免疫輸入法）。
+
+**設定眉角**：tmux.conf 裡反斜線要寫**兩個** `bind -n C-\\ choose-tree -Zw`，`list-keys` 顯示為 `C-\\`。先在 live server 用 `tmux bind-key -n 'C-\'` 試出能註冊、再 scratch conf 驗 `C-\\` 寫法、最後寫進 `~/.tmux.conf` + 範本，reload 後 `list-keys` 確認生效（解掉測試綁定後單獨 source conf 仍出現 = conf 真有效）。
