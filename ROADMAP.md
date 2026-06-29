@@ -32,6 +32,10 @@
   - 拆換行：行右緣 maxX≥0.92 視為螢幕硬折→接上一行；沒到底→真換行
   - 熱鍵 ⌘⇧2：無 Hammerspoon/skhd，用系統「捷徑」綁 Run Shell（一次性 GUI 設定）
   - 技術：Swift 6.3.2 + Vision framework，二進位 gitignore，換機跑 build.sh
+- [x] G. tmuxsync — 跨機共用 tmux 設定範本（prefix 改 `C-a`，2026-06-22）
+  - 痛點：tmux 預設 prefix `C-b` 不順手，想全機統一 `C-a`
+  - 設計：repo `tmuxsync/tmux.shared.conf` 當抄寫範本，各機手動貼進 `~/.tmux.conf` + reload；不做自動部署（Sir 拍「簡單就好」）
+  - 已套用：Mac mini ✅、Air ✅；NB 退役不納入
 
 ## Incubator
 
@@ -42,4 +46,4 @@
 
 ## 現況
 
-A、B、E、F 完成。C 建置中（腳本完成，待實測）。D 開案中（Mac mini 本機小工具，跟其他專案無連動）。tools 基礎建設(README 規則、CLAUDE.md 流程、ROADMAP)已建立。liu.box 已備份進 repo。 ^ck-3c8342-5
+A、B、E、F、G 完成。C 建置中（腳本完成，待實測；NB 退役中可能重新定位）。D 開案中（Mac mini 本機小工具，跟其他專案無連動）。tools 基礎建設(README 規則、CLAUDE.md 流程、ROADMAP)已建立。liu.box 已備份進 repo。 ^ck-3c8342-5
