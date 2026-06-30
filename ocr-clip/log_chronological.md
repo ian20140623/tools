@@ -1,5 +1,29 @@
 # log — ocr-clip
 
+### 06:50 [Mac mini] v0.2.1 — n=1000 真實指令盲測揭露列序錯亂 bug + 修復
+- 痛點：之前 Algorithm G 的盲測（n=240）用合成 token 字串，沒測過真實終端指令常見的
+  `&&`、引號、redirect 組合。想知道在真實使用情境下準確率到底如何。
+- Dataset：從 `~/.claude/projects/*/*.jsonl` 撈過去所有 session 裡 Claude 開過的 Bash
+  tool_use 指令，去重、篩單行 3–300 字元，n=9931 取 1000 抽樣。原本想真的開 Terminal
+  截圖最擬真，但卡在 Screen Recording 權限（screencapture 對這個 tmux 託管的呼叫鏈拿不到
+  授權，需要使用者手動到系統設定開），改用合成圖：抓 Terminal.app 實際設定（Clear Dark
+  profile）查出字體是 SF Mono、不是先前用的 Menlo，改用
+  `NSFont.monospacedSystemFont`（取得 SF Mono 的公開 API，`.SFMono-Regular` 私有字型名
+  直接用會被 CoreText 靜默置換成 Times New Roman）、固定 100 欄寬硬折行。
+- 發現：n=1000 平均 CER 5.19%。但 worst-case 分析發現主因不是認錯字——10.7% 案例
+  Vision 把同一視覺列拆成多段 observation（`&&`/引號/redirect 前後間隙造成），原本
+  `ocr_clip.swift` 只用 `boundingBox.maxY` 排序，同列分段 maxY 幾乎相同、排序不穩定，
+  加上右緣判斷誤判成真換行，導致行序顛倒拼接。這 10.7% 案例平均 CER 20%，貢獻全部
+  誤差的 41%。
+- 修復：排序邏輯改兩段式——先按 `maxY` 容許誤差（行高的 0.6 倍）分桶成「列」，桶內再依
+  `minX` 左到右排序，桶間沿用原 dewrap 右緣判斷。重編後同一份 n=1000 重測：平均 CER
+  5.19%→3.42%（-34%）、字元加權 CER 5.16%→3.77%、最慘案例 CER 0.90→0.44、完全對
+  19.4%→20.5%。
+- 殘留問題（待決定要不要追）：拆 ASCII vs 含中文兩組，ASCII-only CER 僅 1.73%（比原本
+  Menlo 合成測試的 2.03% 還低），但含中文指令（vault 路徑/grep 中文關鍵字，佔樣本
+  20.5%）CER 高達 10.0%，貢獻六成以上剩餘誤差。`en-US`-only 是 Algorithm G 既有取捨
+  （避免犧牲 l/1 準確率），中文混排場景目前沒優化，是否值得重新盲測雙語言留待下一輪。
+
 ### 21:10 [Mac mini] v0.1.0 開案 — 截圖 OCR + 座標拆換行
 - 痛點：終端機指令截圖，超長字串（token/hash/URL）在螢幕上被硬折成多行，貼出來帶一堆假換行；想按熱鍵就把剪貼簿圖片換成「正確不折行」的純文字。
 - 方案比較：
