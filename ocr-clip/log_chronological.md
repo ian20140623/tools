@@ -1,5 +1,27 @@
 # log — ocr-clip
 
+### 07:20 [Mac mini] v0.2.2 — EES 抓出 v0.2.1 的 regression：空列污染分隔判定
+- Eagle Eye + Spock 對 v0.2.1（commit d59d0d4）做 worktree 隔離審查。Spock 第一輪 CLEAR；
+  Eagle Eye 更完整的正式報告抓到 2 個真的問題：
+  1. id=0400（CJK 混雜行）同列拆段插入多餘空格——跟 Spock 的 SHOULD FIX 同一個問題
+     （Vision 切開處不保證是真的視覺間隙），CER 影響極小（+0.004），跟 gap-aware
+     join 一起留到下一輪、用 n=1000 harness 量過再動，這次不碰。
+  2. **真 regression**：v0.2.1 把全部 observation 分桶成 row 之後，如果整列
+     `topCandidates` 全 nil（少見但真的會發生），舊版 `guard...continue` 會讓該列完全
+     消失、不影響鄰列分隔；新版該空列仍佔一個 row slot、用自己的幾何位置決定要不要插
+     `\n`，嚴重情況會把分隔符整個吃掉、無聲黏合兩個無關列。
+- 修復：先用 row-granularity filter（整列全 nil 才丟），重編 + n=1000 回歸確認零
+  regression（mean CER 仍 3.42%、無 case 變糟）。Spock 複查時指出殘留語意分歧：部分列
+  裡夾雜 textless observation 時，那顆 nil 元素的幾何仍會被 `row.max(maxX)` 採計、
+  影響該列自己的 wrap 判定（同一個 class 的 ghost-geometry，從 inter-row 降到
+  intra-row）。改成 element-granularity filter（`rows.map { filter nil }.filter
+  { !isEmpty }`）一次徹底解決，不留任何 trade-off。重編 + n=1000 最終回歸：數字與
+  row-filter 版本完全一致（mean 3.42%、weighted 3.77%、exact 20.5%、max 0.44），
+  零 regression。
+- 流程教訓：worktree 隔離審查時，agent 看到的程式碼是「分支當下 commit」，working tree
+  的未 commit 改動不會帶過去——這次 Spock 第一輪因此審到舊版而判斷「找不到 diff」，
+  後來才確認是 worktree 沒同步、不是 agent 出錯。送審前先 commit 是正確順序。
+
 ### 06:50 [Mac mini] v0.2.1 — n=1000 真實指令盲測揭露列序錯亂 bug + 修復
 - 痛點：之前 Algorithm G 的盲測（n=240）用合成 token 字串，沒測過真實終端指令常見的
   `&&`、引號、redirect 組合。想知道在真實使用情境下準確率到底如何。

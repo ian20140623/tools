@@ -104,6 +104,12 @@ for obs in sortedByY {
 for i in rows.indices {
     rows[i].sort { $0.boundingBox.minX < $1.boundingBox.minX }
 }
+// 辨識不出文字的 observation（topCandidates 為 nil，少見但真的會發生）整個濾掉，
+// 不留它的幾何位置去影響分隔判定——舊版 `guard ... else { continue }` 就是這個語意。
+// 用逐 observation 粒度過濾（而非只濾整列全 nil 的情況）：同一列裡夾雜 textless
+// observation 時，它原本仍會被 `row.max(maxX)` 採計、左右該列自己的 wrap 判定；
+// 過濾乾淨才能保證每列的幾何完全由「真的有輸出文字」的 observation 決定。
+rows = rows.map { $0.filter { $0.topCandidates(1).first?.string != nil } }.filter { !$0.isEmpty }
 
 // ---- 組字 + 拆換行 ----
 // 同列分段之間用空白接（Vision 切開處本來就是視覺間隙）；
