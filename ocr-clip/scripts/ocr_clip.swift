@@ -59,18 +59,26 @@ guard let nsimg = NSImage(pasteboard: pb),
     die("ocr_clip: 剪貼簿裡沒有圖片（先截圖到剪貼簿：⌃⇧⌘4 框選）")
 }
 
-// ---- Vision OCR ----
+// ---- Vision OCR — Algorithm G: 2x upscale + en-US only ----
+// 盲測 round 2（n=240，真實 Menlo 字型）：upscale 讓 Vision 更容易分辨 l vs 1。
+// l1_rate 0.030% vs H 0.049%（-40%）；terminal CER 0.0203 vs H 0.0236；
+// 速度 ~181ms vs H ~242ms；單 pass、無 CJK 分支、code 最簡單。
+func upscale2x(_ src: CGImage) -> CGImage {
+    let w = src.width * 2; let h = src.height * 2
+    let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8,
+        bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(),
+        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    ctx.interpolationQuality = .high
+    ctx.draw(src, in: CGRect(x: 0, y: 0, width: w, height: h))
+    return ctx.makeImage()!
+}
+
+let cgUp = upscale2x(cg)
 let request = VNRecognizeTextRequest()
 request.recognitionLevel = .accurate
-request.usesLanguageCorrection = false      // 照抄，不要修正終端指令
-request.recognitionLanguages = ["zh-Hant", "en-US"]   // 繁中 + 英文，順序=優先權
-
-let handler = VNImageRequestHandler(cgImage: cg, options: [:])
-do {
-    try handler.perform([request])
-} catch {
-    die("ocr_clip: OCR 失敗 — \(error.localizedDescription)")
-}
+request.usesLanguageCorrection = false
+request.recognitionLanguages = ["en-US"]
+try? VNImageRequestHandler(cgImage: cgUp, options: [:]).perform([request])
 
 guard let results = request.results, !results.isEmpty else {
     die("ocr_clip: 圖片裡認不出文字")
@@ -88,6 +96,10 @@ for (idx, line) in lines.enumerated() {
     let wrapped = dewrap && line.boundingBox.maxX >= marginThreshold
     out += wrapped ? "" : "\n"
 }
+
+// ---- Post-OCR: dash-flag l/1 fix ----
+// `-1` 緊跟字母（-1h, -1rth）必是 `-l`；獨立 `-1`（ls -1, head -1）保留不動。
+out = out.replacingOccurrences(of: #"-1([a-z])"#, with: "-l$1", options: .regularExpression)
 
 // ---- 寫回剪貼簿 ----
 pb.clearContents()

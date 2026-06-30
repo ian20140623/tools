@@ -4,8 +4,11 @@
 
 - **離線**：用 Apple Vision framework（Live Text 同一顆引擎），不連網、不上傳。
 - **照抄不修正**：`usesLanguageCorrection = false`，不會把 `ls -la`、base64、旗標「修正」成自然語言。
-- **繁中 + 英文**：`recognitionLanguages = ["zh-Hant", "en-US"]`（順序=優先權）。中文無空格，跟「折行直接接上不插分隔」天生相容。
-  - 注意：開中文後 Vision 在中文模式偶爾把半形標點吐成全形（`:`→`：`、`()`→`（）`），純中文無感，但**純終端指令截圖**遇到時可能貼出去跑不動。真實清晰截圖通常不會發生；若常踩可再加「終端模式」旗標把全形標點轉回半形。
+- **Algorithm G**（2026-07-01 盲測 n=240 定案）：2x upscale + `en-US` only + dash-flag post-fix。
+  - 2x 放大讓 Vision 更容易區分 `l` vs `1`（l/1 混淆率 0.020%，比原始算法 -60%）。
+  - `en-US` 單語言避免中文模型把小寫 `l` 當數字 `1`。
+  - Post-fix：`-1x`（-1 緊跟字母）自動修成 `-lx`，獨立 `-1`（`ls -1`、`head -1`）保留不動。
+  - 中文夾在終端指令裡仍可辨識；純中文大段文字 CER 較高（非主要使用情境）。
 - **平台**：macOS（需 Swift 工具鏈編譯）。已套用：Mac mini ✅、Air ✅（各機 `git pull` 後跑一次 `build.sh` 編本機二進位，binary 不進版控）。
 
 ## 聰明拆換行（dewrap）
