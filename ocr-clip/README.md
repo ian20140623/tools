@@ -19,6 +19,10 @@
     ASCII CER 幾乎持平（1.73%→1.75%），時間成本 +10~15ms。副作用：自動偵測偶爾誤觸發
     zh-Hant、把 ASCII 標點吐成全形（`；`、`（）`、`？` 等），加一組全形→半形 post-fix
     對沖（n=1000 量測：47 案例變好、3 案例微幅變差，淨值再降 CER 0.0302→0.0294）。
+  - **v0.3.1**（EES 審查 v0.3.0 補修）：全形→半形 post-fix 移到 dash-flag 修正**之前**
+    （若破折號被誤判成全形 `－`，dash-flag regex 只認半形、順序顛倒會永久錯過修正機會）；
+    補測後確認 `recognitionLanguages` 裡的 `zh-Hant` 在 `automaticallyDetectsLanguage=true`
+    時完全不影響結果（n=1000 逐位元組相同），清掉這個死設定、只留 `["en-US"]`。
 - **平台**：macOS（需 Swift 工具鏈編譯）。已套用：Mac mini ✅、Air ✅（各機 `git pull` 後跑一次 `build.sh` 編本機二進位，binary 不進版控）。
 
 ## 聰明拆換行（dewrap）

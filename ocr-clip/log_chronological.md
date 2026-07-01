@@ -1,5 +1,25 @@
 # log — ocr-clip
 
+### 09:05 [Mac mini] v0.3.1 — EES 審查 v0.3.0，修 post-fix 順序 + 清掉死設定
+- Eagle Eye + Spock 對 v0.3.0（commit 5904800）做 worktree 隔離審查，兩邊**獨立**測出
+  同一個問題：dash-flag l/1 regex 跑在全形→半形 post-fix **之前**。如果 Vision 誤判把
+  破折號吐成全形 `－`，l/1 regex 只認半形 `-`、比對不到，等全形轉半形跑完已經沒有第二次
+  修正機會。n=1000 語料庫剛好沒有同時含 `-1[a-z]` 跟中文字元的案例、所以沒被 CER 量出來，
+  是純邏輯層的洞，不是已觀測到的辨識錯誤。修法：交換兩個 post-fix pass 順序，全形轉半形
+  排最前面，讓所有假設半形 ASCII 的下游修正（含未來新增的）都吃到已正規化輸入。
+- Spock 額外指出一個沒測過的對照組：v0.3.0 commit message 只證明「auto-detect 贏過
+  固定語言優先序」，沒證明 `recognitionLanguages=["en-US","zh-Hant"]` 這個列表本身在
+  auto-detect 開啟時還有沒有貢獻。補測 E 組（拿掉 zh-Hant、只留
+  `["en-US"]` + `automaticallyDetectsLanguage=true`）：n=1000 跟保留 zh-Hant 的版本
+  **逐位元組完全相同**。證實 `recognitionLanguages` 在 auto-detect 模式下形同虛設，
+  清掉這個誤導性設定，只留 `["en-US"]`。
+- Spock 另指出 `fullwidthToHalfwidth` 只涵蓋標點、沒收全形數字/字母，問「要嘛講出道理
+  要嘛補齊」。查 n=1000 語料：全形數字/字母誤判 0/1000 案例，資料不支持擴大範圍，加註解
+  說明這是資料驅動的範圍、不是遺漏。Eagle Eye 另建議全形空格／「」『』引號也可考慮收錄，
+  同樣查證 0/1000 出現，維持現狀、留待未來真的撞到再補。
+- 兩處修正後重編、重跑完整 n=1000 回歸：數字與 v0.3.0 完全一致（weighted CER 2.94%、
+  exact 20.6%），確認零 regression——這兩個修正處理的都是目前語料庫沒踩到的邊界情況。
+
 ### 08:40 [Mac mini] v0.3.0 — 語言自動偵測解決中文夾雜辨識率差問題
 - 痛點：v0.2.2 的 n=1000 真實指令量測發現，含中文的指令（vault 路徑、grep 中文關鍵字，
   佔樣本 20.5%）CER 高達 10.0%，貢獻六成以上剩餘誤差；`en-US`-only 是 Algorithm G 的
@@ -27,7 +47,6 @@
   20.5%→20.6%。
 - 送 EES 審查（Eagle Eye + Spock，worktree 隔離）確認無 regression 後才 commit。
 
-### 07:20 [Mac mini] v0.2.2 — EES 抓出 v0.2.1 的 regression：空列污染分隔判定
 ### 07:20 [Mac mini] v0.2.2 — EES 抓出 v0.2.1 的 regression：空列污染分隔判定
 - Eagle Eye + Spock 對 v0.2.1（commit d59d0d4）做 worktree 隔離審查。Spock 第一輪 CLEAR；
   Eagle Eye 更完整的正式報告抓到 2 個真的問題：

@@ -59,7 +59,7 @@ guard let nsimg = NSImage(pasteboard: pb),
     die("ocr_clip: 剪貼簿裡沒有圖片（先截圖到剪貼簿：⌃⇧⌘4 框選）")
 }
 
-// ---- Vision OCR — Algorithm G: 2x upscale + en-US/zh-Hant auto-detect ----
+// ---- Vision OCR — Algorithm G: 2x upscale + 語言自動偵測 ----
 // 盲測 round 2（n=240，真實 Menlo 字型）：upscale 讓 Vision 更容易分辨 l vs 1。
 // l1_rate 0.030% vs H 0.049%（-40%）；terminal CER 0.0203 vs H 0.0236；
 // 速度 ~181ms vs H ~242ms；單 pass、無 CJK 分支、code 最簡單。
@@ -69,9 +69,13 @@ guard let nsimg = NSImage(pasteboard: pb),
 // Vision 幾乎只吃列表第一個語言，第二個形同無效（en-US 優先時結果跟純 en-US
 // 逐位元組相同；zh-Hant 優先時中文辨識變好但 ASCII CER 從 1.73% 惡化到 4.11%，
 // 引號/括號被「修正」成全形）。真正有效的是 `automaticallyDetectsLanguage = true`
-// ——這會讓 Vision 逐區域自動判斷語言，而非固定套用列表順序。n=1000 結果：
-// 整體加權 CER 3.77%→3.02%（-20%）、中文 CER 9.93%→6.83%（-31%）、
-// ASCII CER 幾乎持平（1.73%→1.76%），時間成本 +10~15ms（~170ms→~185ms）。
+// ——這會讓 Vision 逐區域自動判斷語言，而非固定套用列表順序。額外測過拿掉
+// `recognitionLanguages` 裡的 zh-Hant（只留 en-US + automaticallyDetectsLanguage）
+// 跟保留 zh-Hant 的版本在 n=1000 上逐位元組完全相同——證實 automaticallyDetectsLanguage
+// 開啟時，recognitionLanguages 列表內容不影響結果（Spock 審查要求驗證的假設），
+// 所以只留 en-US，不留形同虛設的 zh-Hant。n=1000 結果：整體加權 CER 3.77%→3.02%
+// （-20%）、中文 CER 9.93%→6.83%（-31%）、ASCII CER 幾乎持平（1.73%→1.76%），
+// 時間成本 +10~15ms（~170ms→~185ms）。
 func upscale2x(_ src: CGImage) -> CGImage {
     let w = src.width * 2; let h = src.height * 2
     let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8,
@@ -86,7 +90,7 @@ let cgUp = upscale2x(cg)
 let request = VNRecognizeTextRequest()
 request.recognitionLevel = .accurate
 request.usesLanguageCorrection = false
-request.recognitionLanguages = ["en-US", "zh-Hant"]
+request.recognitionLanguages = ["en-US"]
 request.automaticallyDetectsLanguage = true
 try? VNImageRequestHandler(cgImage: cgUp, options: [:]).perform([request])
 
@@ -134,15 +138,15 @@ for (idx, row) in rows.enumerated() {
     out += wrapped ? "" : "\n"
 }
 
-// ---- Post-OCR: dash-flag l/1 fix ----
-// `-1` 緊跟字母（-1h, -1rth）必是 `-l`；獨立 `-1`（ls -1, head -1）保留不動。
-out = out.replacingOccurrences(of: #"-1([a-z])"#, with: "-l$1", options: .regularExpression)
-
 // ---- Post-OCR: 全形標點 → 半形 ----
 // automaticallyDetectsLanguage 逐區域判斷語言時，偶爾會把純 ASCII 標點誤判成中文語境、
 // 吐出全形字元（"；"、"（）"、"？" 等），違反本工具「照抄不修正」的設計初衷。
 // n=1000 量測過這個 map 的淨效果：47 案例變好、3 案例略微變差（都是本來 CER 就很高、
 // 已經救不回的行），加權 CER 再降 0.0302→0.0294，值得做。
+// 範圍只涵蓋標點、不含全形數字/字母（０-９、Ａ-Ｚ）：n=1000 同一批語料裡完全沒出現
+// 全形數字/字母誤判（0/1000），資料不支持先擴大範圍；之後真的撞到再補。
+// 順序：必須排在 dash-flag fix 之前——後者假設輸入已是半形 ASCII，若破折號被誤判成
+// 全形 `－` 才做 dash-flag regex，會比對不到、永久錯過修正機會（Spock 審查抓到）。
 let fullwidthToHalfwidth: [Character: Character] = [
     "！": "!", "＃": "#", "＄": "$", "％": "%", "＆": "&", "（": "(", "）": ")",
     "＊": "*", "＋": "+", "，": ",", "－": "-", "．": ".", "／": "/",
@@ -151,6 +155,10 @@ let fullwidthToHalfwidth: [Character: Character] = [
     "｛": "{", "｜": "|", "｝": "}", "～": "~", "。": ".", "、": ",",
 ]
 out = String(out.map { fullwidthToHalfwidth[$0] ?? $0 })
+
+// ---- Post-OCR: dash-flag l/1 fix ----
+// `-1` 緊跟字母（-1h, -1rth）必是 `-l`；獨立 `-1`（ls -1, head -1）保留不動。
+out = out.replacingOccurrences(of: #"-1([a-z])"#, with: "-l$1", options: .regularExpression)
 
 // ---- 寫回剪貼簿 ----
 pb.clearContents()
