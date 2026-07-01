@@ -1,5 +1,33 @@
 # log — ocr-clip
 
+### 08:40 [Mac mini] v0.3.0 — 語言自動偵測解決中文夾雜辨識率差問題
+- 痛點：v0.2.2 的 n=1000 真實指令量測發現，含中文的指令（vault 路徑、grep 中文關鍵字，
+  佔樣本 20.5%）CER 高達 10.0%，貢獻六成以上剩餘誤差；`en-US`-only 是 Algorithm G 的
+  既有取捨，一直沒認真評估過雙語言方案在真實內容下的成本效益。
+- 方案比較（用同一份 n=1000 corpus 做 A/B/C/D 四組測試）：
+  - A `en-US` only（現有基準）：overall weighted CER 3.77%，ASCII 1.73%，CJK 9.93%。
+  - B `["en-US","zh-Hant"]`（en-US 排第一）：**跟 A 逐位元組完全相同**——證實 Vision
+    的 recognitionLanguages 列表不是「混合辨識」，幾乎只吃排第一的語言，第二個無效。
+  - C `["zh-Hant","en-US"]`（zh-Hant 排第一）：CJK CER 降到 7.26%，但 ASCII CER 從
+    1.73% 惡化到 4.11%——證實原本 README 的顧慮是真的：zh-Hant 優先會把 ASCII 標點
+    「修正」成全形（`(` → `（`、`;` → `；`），違反「照抄不修正」設計。
+  - D `["en-US","zh-Hant"]` + `automaticallyDetectsLanguage = true`：**選這個**。
+    這是真正的逐區域自動語言判斷（不是列表優先序）。overall weighted CER
+    3.77%→3.02%（-20%）、CJK CER 9.93%→6.83%（-31%）、ASCII CER 幾乎持平
+    （1.73%→1.76%），l/1 混淆只從 351 升到 380 次（3/1000 案例明顯變差，都是
+    低頻率個案）。時間成本 +10~15ms（~170ms→~185ms），可接受。
+- 殘留問題與對沖：D 仍有 5.3%（53/1000）案例出現全形標點誤判（自動偵測誤觸發
+  zh-Hant 時把 ASCII 標點吐成全形）。加一組全形→半形 post-fix map（比照既有
+  dash-flag 修法），n=1000 量測淨效果：47 案例變好、3 案例微幅變差（三案例本來
+  CER 就很高，屬於已知救不回的行），加權 CER 再降 0.0302→0.0294。GT 裡有 14/1000
+  案例本來就合法含全形標點，這個 post-fix 是機率取捨、不是保證無害，但淨值正、
+  且跟 dash-flag post-fix 屬同一類已接受的已知取捨。
+- 最終 n=1000（v0.3.0 完整組合）：overall weighted CER 3.77%→2.94%（-22%）、
+  CJK CER 9.93%→6.56%（-34%）、ASCII CER 1.73%→1.75%（持平）、完全對
+  20.5%→20.6%。
+- 送 EES 審查（Eagle Eye + Spock，worktree 隔離）確認無 regression 後才 commit。
+
+### 07:20 [Mac mini] v0.2.2 — EES 抓出 v0.2.1 的 regression：空列污染分隔判定
 ### 07:20 [Mac mini] v0.2.2 — EES 抓出 v0.2.1 的 regression：空列污染分隔判定
 - Eagle Eye + Spock 對 v0.2.1（commit d59d0d4）做 worktree 隔離審查。Spock 第一輪 CLEAR；
   Eagle Eye 更完整的正式報告抓到 2 個真的問題：

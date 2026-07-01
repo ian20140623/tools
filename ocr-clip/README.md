@@ -4,18 +4,21 @@
 
 - **離線**：用 Apple Vision framework（Live Text 同一顆引擎），不連網、不上傳。
 - **照抄不修正**：`usesLanguageCorrection = false`，不會把 `ls -la`、base64、旗標「修正」成自然語言。
-- **Algorithm G**（2026-07-01 盲測 n=240 定案）：2x upscale + `en-US` only + dash-flag post-fix。
+- **Algorithm G**（2026-07-01 盲測 n=240 定案）：2x upscale + 語言自動偵測 + dash-flag/全形標點 post-fix。
   - 2x 放大讓 Vision 更容易區分 `l` vs `1`（l/1 混淆率 0.020%，比原始算法 -60%）。
-  - `en-US` 單語言避免中文模型把小寫 `l` 當數字 `1`。
   - Post-fix：`-1x`（-1 緊跟字母）自動修成 `-lx`，獨立 `-1`（`ls -1`、`head -1`）保留不動。
   - **列分桶排序**（2026-07-01 v0.2.1，n=1000 真實指令盲測補修）：單純按 `maxY` 排序時，
     同一視覺列被 Vision 拆成多段 observation（常見於 `&&`、引號、redirect 前後的間隙）會
     順序錯亂；改成先按 `maxY` 容許誤差分桶成列、桶內再依 `minX` 左到右排序。修後 n=1000
-    平均 CER 5.19%→3.42%、最慘案例 CER 0.90→0.44。
-  - **中文夾在指令裡辨識率明顯較差**（n=1000 真實指令量測，非「仍可辨識」）：純 ASCII 指令
-    CER 1.73%，但含中文字串（vault 路徑、grep 中文關鍵字）CER 達 10.0%，且只佔樣本 20.5%
-    卻貢獻六成以上剩餘誤差。`en-US`-only 是已知設計取捨（避免犧牲 l/1 準確率），中文混排
-    場景目前沒有特別優化，待評估是否值得用雙語言重新盲測。
+    平均 CER 5.19%→3.42%、最慘案例 CER 0.90→0.44。v0.2.2 補修同批 EES 審查抓到的空列
+    regression（辨識不出文字的 observation 仍會污染鄰列分隔判定）。
+  - **語言自動偵測**（2026-07-01 v0.3.0）：單純把 `zh-Hant` 加進 `recognitionLanguages`
+    列表不會做真正逐區域雙語辨識——Vision 幾乎只吃列表第一個語言，第二個形同無效；
+    真正有效的是 `automaticallyDetectsLanguage = true`，讓 Vision 逐區域自動判斷語言。
+    n=1000 真實指令盲測：整體加權 CER 3.77%→2.94%（-22%）、中文 CER 9.93%→6.56%（-34%）、
+    ASCII CER 幾乎持平（1.73%→1.75%），時間成本 +10~15ms。副作用：自動偵測偶爾誤觸發
+    zh-Hant、把 ASCII 標點吐成全形（`；`、`（）`、`？` 等），加一組全形→半形 post-fix
+    對沖（n=1000 量測：47 案例變好、3 案例微幅變差，淨值再降 CER 0.0302→0.0294）。
 - **平台**：macOS（需 Swift 工具鏈編譯）。已套用：Mac mini ✅、Air ✅（各機 `git pull` 後跑一次 `build.sh` 編本機二進位，binary 不進版控）。
 
 ## 聰明拆換行（dewrap）
