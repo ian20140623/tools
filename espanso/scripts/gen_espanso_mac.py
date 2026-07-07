@@ -17,6 +17,7 @@ trigger 形狀沿用：前 4 字母 + ';'（例：know; -> knowledge-system）�
 """
 
 import os
+import shlex
 from pathlib import Path
 
 import gen_espanso as base
@@ -36,7 +37,7 @@ def yaml_escape(s: str) -> str:
     return s.replace("\\", "\\\\").replace('"', '\\"')
 
 
-def generate_yaml(trigger_map) -> str:
+def generate_yaml(trigger_map, cd_trigger_map) -> str:
     """從 trigger_map 生成 espanso match YAML 字串。撞名（一 trigger 多專案）跳過。"""
     lines = [
         "# 自動生成 by gen_espanso_mac.py — 請勿手動編輯",
@@ -55,14 +56,24 @@ def generate_yaml(trigger_map) -> str:
         lines.append(f'  - trigger: "{t}"')
         lines.append(f'    replace: "{r}"')
         written += 1
+    for trigger, names in sorted(cd_trigger_map.items()):
+        if len(names) > 1:
+            skipped.append(f"{trigger} ({', '.join(names)})")
+            continue
+        t = yaml_escape(trigger)
+        r = yaml_escape(f"cd ~/Projects/{shlex.quote(names[0])}")
+        lines.append(f'  - trigger: "{t}"')
+        lines.append(f'    replace: "{r}"')
+        written += 1
     return "\n".join(lines) + "\n", written, skipped
 
 
 def generate():
     projects = base.get_projects()
     trigger_map = base.build_trigger_map(projects)
+    cd_trigger_map = base.build_cd_trigger_map(base.get_top_level_projects())
 
-    yaml_text, written, skipped = generate_yaml(trigger_map)
+    yaml_text, written, skipped = generate_yaml(trigger_map, cd_trigger_map)
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_FILE.write_text(yaml_text, encoding="utf-8")
@@ -75,6 +86,11 @@ def generate():
     for trigger, names in sorted(trigger_map.items()):
         if len(names) == 1:
             print(f"  {trigger:10s} -> {names[0]}")
+    print()
+    print("--- cd triggers ---")
+    for trigger, names in sorted(cd_trigger_map.items()):
+        if len(names) == 1:
+            print(f"  {trigger:10s} -> cd ~/Projects/{names[0]}")
     print()
     print("套用：espanso restart（或 open -a Espanso）")
 

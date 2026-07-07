@@ -34,25 +34,50 @@ def load_config():
     return {"scan_children": []}
 
 
+def is_worktree(project_dir: Path) -> bool:
+    """git worktree 的 .git 是檔案，內容 gitdir 指向主 repo 的 .git/worktrees/<name>。
+    submodule 的 .git 也是檔案（指向 .git/modules/<name>），用路徑內容分辨兩者，避免誤排除。"""
+    git_path = project_dir / ".git"
+    if not git_path.is_file():
+        return False
+    try:
+        content = git_path.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return False
+    return "worktrees" in content
+
+
+def _scan_top_level(base_dir: Path):
+    """掃描指定目錄第一層，排除 SKIP、隱藏資料夾、worktree"""
+    names = []
+    for d in os.listdir(base_dir):
+        full = base_dir / d
+        if full.is_dir() and d not in SKIP and not d.startswith(".") and not is_worktree(full):
+            names.append(d)
+    return names
+
+
 def get_projects():
-    """回傳所有專案名稱（含子專案）"""
+    """回傳所有專案名稱（含子專案，排除 worktree）"""
     config = load_config()
 
-    # 第一層
-    names = []
-    for d in os.listdir(PROJECTS_DIR):
-        if (PROJECTS_DIR / d).is_dir() and d not in SKIP and not d.startswith("."):
-            names.append(d)
+    names = _scan_top_level(PROJECTS_DIR)
 
     # 設定檔指定的子資料夾
     for rel_path in config.get("scan_children", []):
         parent = PROJECTS_DIR / rel_path
         if parent.is_dir():
             for d in os.listdir(parent):
-                if (parent / d).is_dir() and not d.startswith("."):
+                full = parent / d
+                if full.is_dir() and not d.startswith(".") and not is_worktree(full):
                     names.append(d)
 
     return sorted(set(names))
+
+
+def get_top_level_projects():
+    """回傳 ~/Projects 第一層專案（排除 worktree），供 cd trigger 使用（需要真實路徑，子專案不適用）"""
+    return sorted(_scan_top_level(PROJECTS_DIR))
 
 
 def strip_leading_numbers(name: str) -> str:
@@ -80,6 +105,17 @@ def build_trigger_map(projects):
     for name in projects:
         prefix = make_prefix(name, 4)
         trigger = f"{prefix};"
+        trigger_map.setdefault(trigger, []).append(name)
+
+    return trigger_map
+
+
+def build_cd_trigger_map(projects):
+    """建立 cd+前綴 trigger → [專案名] 的對應表（前 4 字母，撞名的專案兩邊都跳過）"""
+    trigger_map = {}
+    for name in projects:
+        prefix = make_prefix(name, 4)
+        trigger = f"cd{prefix};"
         trigger_map.setdefault(trigger, []).append(name)
 
     return trigger_map

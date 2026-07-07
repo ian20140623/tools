@@ -212,3 +212,28 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - **方案決定**：討論過 SSH 一鍵推 / symlink / source 範本，Sir 拍「簡單就好、各機手動改」→ 不做自動部署。repo 放 `tmux/tmux.shared.conf` 當抄寫範本（`unbind C-b` / `set -g prefix C-a` / `bind C-a send-prefix`），各機自己貼進 `~/.tmux.conf` + `tmux source-file` reload。各機 conf 仍各自獨立，範本只管共用部分。
 - **取捨**：prefix 改 `C-a` 後 shell `Ctrl-a`（跳行首）被 tmux 攔截，要送字面需連按兩次（send-prefix）。Sir 已知仍選 `C-a`。
 - **已套用**：Mac mini ✅（`tmux show -g prefix` = `prefix C-a`）。Air / NB 待手動套。無新外部依賴，env.machines.md 不動。
+
+## 2026-07-07（二）
+
+### [Mac mini] espanso 新增 cd 捷徑生成 + 排除 worktree
+
+- **痛點**：用戶想打 `cdkn;` 一步展開成 `cd ~/Projects/knowledge-system`，不想像現有 `know;` 只展開專案名還要自己補 `cd ~/Projects/`。
+- **先手動加**：一開始直接在 `mac-config/match/base.yml` 手動加 `cdkn;` 一筆，用戶追問「要一般化，cd + 前綴」。
+- **設計過程**：
+  - 前 2 字母撞名嚴重（ai/co/fl/li/ks/se/to 開頭都撞），問用戶怎麼消歧 → 選「固定字母數、撞名跳過」而非自動延長或手動指定。
+  - 用戶問「現在的 4 字母專案名 trigger 是不是本來就撞名？」查證發現真的撞：`kswt;`(ks-wt-entity-extraction/lexical-hybrid/research-feed)、`life;`(life-os/life-os-wt-memory)、`line;`(line-file-bot/line-inbox)，一直被既有的「撞名跳過」邏輯靜默排除。
+  - 追查 `kswt;`/`life;` 撞名的來源，發現 `ks-wt-*`、`life-os-wt-memory` 其實是 **git worktree**（`.git` 是檔案指向主 repo，不是獨立 repo）——是 Eagle Eye/Spock review 用 `isolation: "worktree"` 產生的暫存目錄，不該出現在任何專案 trigger 裡。用戶拍板排除 worktree。
+  - cd 前綴改 4 字母（跟現有專案名 trigger 一致）後重測，撞名只剩 `line-file-bot`/`line-inbox`（兩者縮寫都是 `line`），用戶接受維持撞名跳過、不特別處理。
+- **實作**（`espanso/scripts/gen_espanso.py` + `gen_espanso_mac.py`）：
+  - 新增 `is_worktree(project_dir)`：`(project_dir / ".git").is_file()` 判斷。`get_projects()` 全面排除 worktree。
+  - 新增 `get_top_level_projects()`：只掃 `~/Projects` 第一層（cd 捷徑不含 `scan_children` 子專案，因為子專案沒有可推導的完整路徑）。
+  - 新增 `build_cd_trigger_map(projects)`：`cd{make_prefix(name,4)};` → `cd ~/Projects/{name}`，撞名（`len(names)>1`）沿用既有邏輯跳過。
+  - `gen_espanso_mac.py` 的 `generate_yaml()`/`generate()` 把 cd trigger 併入同一份 `projects.yml` 輸出。
+  - 拿掉先前手動加的 `cdkn;`（`base.yml` 淨變更為零），避免跟自動生成的重複 trigger 衝突。
+- **結果**：25 組 cd 捷徑生成（`cdknow;`→`cd ~/Projects/knowledge-system` 等），2 組撞名跳過（`line;`、`cdline;`，都是 line-file-bot/line-inbox）。`projects.yml` 本機重生 + `espanso restart` 生效（該檔不進 git，其他機器要用需各自重跑 `gen_espanso_mac.py`）。
+- **Eagle Eye 審查（isolation worktree）抓到 2 項、已修**：
+  1. **[高] cd 展開文字沒做 shell 跳脫**——資料夾名稱含空白會讓 `cd` 失敗，含 `;`/`` ` ``/`$()` 在終端機打出來會被當額外指令執行。修法：`gen_espanso_mac.py` 用 Python 標準庫 `shlex.quote()` 包住路徑的專案名稱部分（`~` 留在引號外維持展開），實測 `evil; rm -rf /tmp/x`、`foo$(whoami)`、`my project` 三種案例都正確變成單引號包起來的安全字串。
+  2. **[中] `is_worktree()` 語意上也會誤判 git submodule**——worktree 和 submodule 的 `.git` 都是「內容為 gitdir 路徑」的檔案，格式一樣。修法：改讀檔案內容判斷 gitdir 是否指向 `.../worktrees/...`（submodule 指向 `.../modules/...`），精確區分兩者（目前 `~/Projects` 無 submodule，屬防禦性修正）。
+  3. 順手把 `get_projects()`/`get_top_level_projects()` 重複的第一層掃描邏輯抽成共用 `_scan_top_level()`，消除「改一份忘記改另一份」的分岔風險。
+  4. 低風險/理論性提醒（全符號資料夾名稱會產生裸 `cd;` trigger）維持不動——屬既有 4 字母 trigger 本來就有的邊界、目前無實際資料夾會踩到。
+- 修完重跑 `gen_espanso_mac.py` + `espanso restart` 驗證輸出不變（無 runtime error、`cdknow;` 等 25 組正常）。

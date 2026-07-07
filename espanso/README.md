@@ -69,6 +69,10 @@ Windows 用無蝦米接 liu.box；Mac 沒無蝦米，改讓 espanso 自己展開
 cd ~/Projects/tools/espanso/scripts && python3 gen_espanso_mac.py
 ```
 
+**cd 捷徑（`projects.yml` 一併生成）**：每個第一層專案再多一組 `cd{前4字母};` → `cd ~/Projects/{專案名}`（例 `cdknow;` → `cd ~/Projects/knowledge-system`）。跟專案名 trigger 共用同一套撞名跳過規則——縮寫相同的專案兩邊都不生成。只掃第一層，不含 `scan_children` 子專案（子專案沒有可推導的完整路徑）。
+
+**自動排除 git worktree**：`is_worktree()` 判斷 `.git` 是檔案（worktree，指向主 repo 的 `.git/worktrees/...`）還是資料夾（真正的 repo），worktree 一律不生成 trigger——這類資料夾多半是 Eagle Eye/Spock review 用 `isolation: "worktree"` 留下的暫存工作目錄，不該有專案名/cd 捷徑。
+
 **⚠️ Mac 啟動陷阱**：espanso 必須以 GUI App 身份啟動（`open -a Espanso` 或 `espanso service start`），**不能**從終端機 `espanso worker` 拉起來——後者 macOS 把輔助使用權限歸給終端機，注入會被靜默擋掉（worker log 看似正常、字卻打不出來）。開機自啟靠 `espanso service register`（寫 `~/Library/LaunchAgents` plist，`RunAtLoad=true`）。
 
 **⚠️ Mac 啟動陷阱 2（launchctl EIO，macOS 26 Tahoe 實測，2026-06-17 Air）**：`espanso service register` 成功後，`espanso service start` / `launchctl bootstrap` 可能撞 `Bootstrap failed: 5: Input/output error`（errno 5 EIO），launchd 根本沒 exec（`/tmp/espanso.err` 空）。根因是服務被留在 **disabled** 狀態（前面失敗的 start 嘗試造成）。解法：bootstrap 前先 enable——
