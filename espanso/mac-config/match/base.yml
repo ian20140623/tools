@@ -39,6 +39,9 @@ matches:
   - trigger: "cdpj;"
     replace: "cd ~/Projects"
 
+  - trigger: "obs;"
+    replace: "Obsidian"
+
   # ── espanso 預設範例（保留）──
   # Simple text replacement
   - trigger: ":espanso"

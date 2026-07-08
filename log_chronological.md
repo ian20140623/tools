@@ -237,3 +237,10 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
   3. 順手把 `get_projects()`/`get_top_level_projects()` 重複的第一層掃描邏輯抽成共用 `_scan_top_level()`，消除「改一份忘記改另一份」的分岔風險。
   4. 低風險/理論性提醒（全符號資料夾名稱會產生裸 `cd;` trigger）維持不動——屬既有 4 字母 trigger 本來就有的邊界、目前無實際資料夾會踩到。
 - 修完重跑 `gen_espanso_mac.py` + `espanso restart` 驗證輸出不變（無 runtime error、`cdknow;` 等 25 組正常）。
+
+## 2026-07-08（三）
+
+### [Mac mini] espanso 加自訂縮寫 obs;
+
+- `mac-config/match/base.yml` 加 `obs;` → `Obsidian`，跟 projects.yml 自動生成的專案 trigger 無撞名。
+- `espanso restart` 生效。
