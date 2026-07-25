@@ -244,3 +244,11 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 
 - `mac-config/match/base.yml` 加 `obs;` → `Obsidian`，跟 projects.yml 自動生成的專案 trigger 無撞名。
 - `espanso restart` 生效。
+
+## 2026-07-25（六）
+
+### 22:29 [DEV01] espanso onboarding
+
+- 安裝 Espanso 2.4.0（Homebrew cask），以 GUI 啟動並註冊 launchd 登入自啟；`espanso status` 顯示 running。
+- 依跨機同步架構把 live `base.yml`／`default.yml` symlink 到 repo `mac-config/`，並由 `gen_espanso_mac.py` 生成 59 組本機 trigger；`line;`／`cdline;` 因撞名跳過。
+- macOS 輔助使用與輸入監控權限需由用戶在系統設定確認，CLI 無法替代授權。
