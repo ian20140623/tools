@@ -43,3 +43,12 @@ bind C-a send-prefix
 **改鍵**：Sir 從 prefix→Ctrl+w（2 鍵 bulletproof）/ F9 / `C-\` 選 **`C-\`**（真單鍵、claude 與 mac 版 VS Code 都沒佔、Ctrl 系免疫輸入法）。
 
 **設定眉角**：tmux.conf 裡反斜線要寫**兩個** `bind -n C-\\ choose-tree -Zw`，`list-keys` 顯示為 `C-\\`。先在 live server 用 `tmux bind-key -n 'C-\'` 試出能註冊、再 scratch conf 驗 `C-\\` 寫法、最後寫進 `~/.tmux.conf` + 範本，reload 後 `list-keys` 確認生效（解掉測試綁定後單獨 source conf 仍出現 = conf 真有效）。
+
+## 2026-07-29（三）
+
+### 14:36 [Air] 切換鍵改為 prefix → Ctrl+w
+
+- **why**：無 prefix 的 `Ctrl-\` 在 VS Code 內建終端會先被 VS Code 攔截，按鍵到不了 tmux；原方案無法涵蓋 Air 的實際使用環境。
+- **決定**：改用 `Ctrl-a` 放開後再按 `Ctrl-w`。prefix 能可靠進入 tmux，第二鍵保留 Ctrl 修飾，避免中文輸入法吃掉裸字母 `w`；也不占用 Claude Code 的 `Ctrl-o`。
+- **reload 相容性**：範本先 `unbind -n C-\\`，再註冊新綁定；否則已運行 server source 新設定後，舊的全域 `Ctrl-\` 仍會殘留。
+- **取捨**：從單鍵退回兩段按鍵，但換得 VS Code、原生終端與 SSH 共用同一套操作。範本仍維持手動同步，不新增部署機制。

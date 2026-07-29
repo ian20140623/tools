@@ -7,7 +7,7 @@
 
 | 檔案 | 用途 |
 |------|------|
-| [tmux.shared.conf](tmux.shared.conf) | 共用設定範本（目前：prefix 改 `C-a`） |
+| [tmux.shared.conf](tmux.shared.conf) | 共用設定範本（prefix 改 `C-a`；切換 session/window 用 `C-a` 後按 `Ctrl-w`） |
 
 ## 怎麼套用到一台新機器
 
@@ -18,6 +18,11 @@
    tmux source-file ~/.tmux.conf   # 沒開 tmux 的話下次開自動生效
    ```
 4. 驗證：`tmux show -g prefix` 應顯示 `prefix C-a`
+
+## 常用按鍵
+
+- 切換 session/window：先按 `Ctrl-a`、放開，再按 `Ctrl-w`。
+- 第二鍵保留 `Ctrl` 修飾，避免中文輸入法吃掉裸字母；也避開 VS Code 內建終端攔截無 prefix 的 `Ctrl-\`。
 
 ## 注意
 
