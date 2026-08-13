@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import fcntl
-import hashlib
 import json
 import os
 import shutil
@@ -37,21 +36,18 @@ def log(message: str) -> None:
     print(f"{datetime.now().astimezone().isoformat(timespec='seconds')} {message}", flush=True)
 
 
-def file_digest(path: Path) -> str:
-    # A direct open() can block forever when macOS File Provider is hydrating a
-    # Dropbox file. Keep that I/O in a child process so the one-shot agent has a
-    # real timeout and launchd can retry on the next event.
-    result = subprocess.run(
-        ["/usr/bin/shasum", "-a", "256", str(path)],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=20,
+def file_fingerprint(path: Path) -> str:
+    """Identify Dropbox updates without opening File Provider file contents."""
+    metadata = path.stat()
+    return ":".join(
+        str(value)
+        for value in (
+            metadata.st_dev,
+            metadata.st_ino,
+            metadata.st_size,
+            metadata.st_mtime_ns,
+        )
     )
-    digest = result.stdout.split(maxsplit=1)[0]
-    if len(digest) != hashlib.sha256().digest_size * 2:
-        raise RuntimeError(f"unexpected shasum output for {path}")
-    return digest
 
 
 def espanso_binary() -> str:
@@ -88,19 +84,19 @@ def service_is_running(espanso: str) -> bool:
     return result.returncode == 0 and result.stdout.strip().lower() == "espanso is running"
 
 
-def load_previous_digest(state_file: Path) -> str | None:
+def load_previous_fingerprint(state_file: Path) -> str | None:
     try:
         payload = json.loads(state_file.read_text(encoding="utf-8"))
-        return payload.get("sha256") if isinstance(payload, dict) else None
+        return payload.get("fingerprint") if isinstance(payload, dict) else None
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         return None
 
 
-def store_digest(state_file: Path, digest: str) -> None:
+def store_fingerprint(state_file: Path, fingerprint: str) -> None:
     state_file.parent.mkdir(parents=True, exist_ok=True)
     temporary = state_file.with_suffix(".tmp")
     temporary.write_text(
-        json.dumps({"sha256": digest}, ensure_ascii=False) + "\n",
+        json.dumps({"fingerprint": fingerprint}, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     os.replace(temporary, state_file)
@@ -120,15 +116,15 @@ def reload_if_changed(source: Path, live: Path, *, force: bool = False) -> bool:
     state_file = STATE_DIR / "state.json"
     with lock_path.open("a+") as lock_file:
         fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
-        digest = file_digest(source)
-        if not force and load_previous_digest(state_file) == digest:
+        fingerprint = file_fingerprint(source)
+        if not force and load_previous_fingerprint(state_file) == fingerprint:
             return False
 
         espanso = espanso_binary()
         # Parses every active match file without relying on the running worker.
         run_checked([espanso, "match", "list"])
-        verified_digest = file_digest(source)
-        if verified_digest != digest:
+        verified_fingerprint = file_fingerprint(source)
+        if verified_fingerprint != fingerprint:
             raise RuntimeError("Dropbox source changed during validation; retrying next event")
         if service_is_running(espanso):
             # The daemon watches the live config directory, not a symlink target.
@@ -145,8 +141,8 @@ def reload_if_changed(source: Path, live: Path, *, force: bool = False) -> bool:
         else:
             raise RuntimeError("espanso did not report running after config reload")
 
-        store_digest(state_file, digest)
-        log(f"notified Espanso of shared config sha256={digest[:12]}")
+        store_fingerprint(state_file, fingerprint)
+        log(f"notified Espanso of shared config fingerprint={fingerprint}")
         return True
 
 

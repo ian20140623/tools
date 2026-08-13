@@ -98,4 +98,4 @@
 
 - **部署**：prd01、dev01 都已 fast-forward tools、把 live `base.yml` 切到 Dropbox canonical，保留原設定備份並重生 `projects.yml`；因此 shared `know;`／`cdknow;` 不再與舊生成項目重複。
 - **環境差異**：SSH 的精簡 PATH 會先選到 `/usr/bin/python3`；部署明確使用 `/opt/homebrew/bin/python3`。dev01 缺 PyYAML，依 PEP 668 建議安裝到 user site，未改 Homebrew 管理檔案。
-- **新 failure mode**：dev01 首次 background run 在 Python `open()` Dropbox File Provider 檔案時卡在 kernel 約 50 分鐘，LaunchAgent 無法結束。改由有 20 秒 timeout 的 `/usr/bin/shasum` 子程序計算 digest；File Provider 若卡住，本輪 fail-loud，launchd 下次事件再試，不再永久佔住 one-shot agent。 ^ck-mac-espanso-fileprovider-timeout-1
+- **新 failure mode**：dev01 首次 background run 在 Python `open()` Dropbox File Provider 檔案時卡在 kernel 約 50 分鐘，LaunchAgent 無法結束；改成有 timeout 的 `shasum` 後雖能 fail-loud，但 launchd ancestry 仍每次無法讀內容（SSH shell 同時可讀，拿掉 Background QoS 也無效）。最終由 `stat` 的 device／inode／size／mtime fingerprint 判斷變更與 TOCTOU，內容解析交給已有 timeout 的 Espanso CLI；helper 不再直接 open Dropbox bytes。 ^ck-mac-espanso-fileprovider-timeout-1
