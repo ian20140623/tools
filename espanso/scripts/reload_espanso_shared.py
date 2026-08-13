@@ -38,7 +38,20 @@ def log(message: str) -> None:
 
 
 def file_digest(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # A direct open() can block forever when macOS File Provider is hydrating a
+    # Dropbox file. Keep that I/O in a child process so the one-shot agent has a
+    # real timeout and launchd can retry on the next event.
+    result = subprocess.run(
+        ["/usr/bin/shasum", "-a", "256", str(path)],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    digest = result.stdout.split(maxsplit=1)[0]
+    if len(digest) != hashlib.sha256().digest_size * 2:
+        raise RuntimeError(f"unexpected shasum output for {path}")
+    return digest
 
 
 def espanso_binary() -> str:

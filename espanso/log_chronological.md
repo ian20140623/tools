@@ -93,3 +93,9 @@
 - **已知取捨**：symlink 代表 Dropbox 同步壞 YAML 時，檔案本身已立即出現在 live 路徑；validator 能避免主動 reload，但不能隔離該檔。靠安裝前 YAML 驗證、Dropbox 版本歷史和本機備份復原。此檔屬可執行設定，不放秘密，也不可開放他人寫入 Dropbox 資料夾。
 - **防撞名**：`gen_espanso_mac.py` 讀取 shared base triggers，從本機專案 triggers 排除同名項目；因此 `know;` / `cdknow;` 不會再被 `projects.yml` 蓋掉。
 - **Air 結果**：`know; → knowledge-system`、`cdknow; → cd ~/Projects/knowledge-system` 已生效；canonical 與 repo seed hash 一致，LaunchAgent 最近一次執行 exit 0。全程用背景 CLI 驗證，未做會搶焦點的 GUI 輸入測試。 ^ck-mac-espanso-dropbox-1
+
+### 18:55 [MAC-AIR] prd01／dev01 部署與 File Provider 卡死修正
+
+- **部署**：prd01、dev01 都已 fast-forward tools、把 live `base.yml` 切到 Dropbox canonical，保留原設定備份並重生 `projects.yml`；因此 shared `know;`／`cdknow;` 不再與舊生成項目重複。
+- **環境差異**：SSH 的精簡 PATH 會先選到 `/usr/bin/python3`；部署明確使用 `/opt/homebrew/bin/python3`。dev01 缺 PyYAML，依 PEP 668 建議安裝到 user site，未改 Homebrew 管理檔案。
+- **新 failure mode**：dev01 首次 background run 在 Python `open()` Dropbox File Provider 檔案時卡在 kernel 約 50 分鐘，LaunchAgent 無法結束。改由有 20 秒 timeout 的 `/usr/bin/shasum` 子程序計算 digest；File Provider 若卡住，本輪 fail-loud，launchd 下次事件再試，不再永久佔住 one-shot agent。 ^ck-mac-espanso-fileprovider-timeout-1
