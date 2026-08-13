@@ -21,6 +21,7 @@ import shlex
 from pathlib import Path
 
 import gen_espanso as base
+import yaml
 
 # espanso 設定目錄（可用 ESPANSO_CONFIG 覆寫；預設 macOS 標準路徑）
 _ESPANSO_DIR = Path(
@@ -30,6 +31,20 @@ _ESPANSO_DIR = Path(
     )
 )
 OUTPUT_FILE = _ESPANSO_DIR / "match" / "projects.yml"
+SHARED_MATCH_FILE = _ESPANSO_DIR / "match" / "base.yml"
+
+
+def get_reserved_triggers() -> set[str]:
+    """Return triggers owned by the shared file so generated matches never duplicate them."""
+    if not SHARED_MATCH_FILE.is_file():
+        return set()
+    payload = yaml.safe_load(SHARED_MATCH_FILE.read_text(encoding="utf-8"))
+    matches = payload.get("matches", []) if isinstance(payload, dict) else []
+    return {
+        item["trigger"]
+        for item in matches
+        if isinstance(item, dict) and isinstance(item.get("trigger"), str)
+    }
 
 
 def yaml_escape(s: str) -> str:
@@ -72,6 +87,10 @@ def generate():
     projects = base.get_projects()
     trigger_map = base.build_trigger_map(projects)
     cd_trigger_map = base.build_cd_trigger_map(base.get_top_level_projects())
+    reserved = get_reserved_triggers()
+    for trigger in reserved:
+        trigger_map.pop(trigger, None)
+        cd_trigger_map.pop(trigger, None)
 
     yaml_text, written, skipped = generate_yaml(trigger_map, cd_trigger_map)
 

@@ -252,3 +252,18 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - 安裝 Espanso 2.4.0（Homebrew cask），以 GUI 啟動並註冊 launchd 登入自啟；`espanso status` 顯示 running。
 - 依跨機同步架構把 live `base.yml`／`default.yml` symlink 到 repo `mac-config/`，並由 `gen_espanso_mac.py` 生成 59 組本機 trigger；`line;`／`cdline;` 因撞名跳過。
 - macOS 輔助使用與輸入監控權限需由用戶在系統設定確認，CLI 無法替代授權。
+
+## 2026-08-13（四）
+
+### 17:31 [NB] Agent skills 補上 repo 協作約定
+
+- **起因**：執行 Matt Pocock skills setup，讓新 skills 知道本 repo 的 issue tracker、triage label 與 domain docs 要去哪裡讀，避免每次由 agent 猜規則。
+- **做法**：`CLAUDE.md` 新增入口，細節拆到 `docs/agents/{issue-tracker,triage-labels,domain}.md`；目前 GitHub Issues 是 issue／PRD canonical，五種 triage roles 先採同名 label，domain docs 採單一 context layout 並維持 lazy creation。
+
+### 17:31 [NB] Espanso 共用字串改由 Dropbox 即時跨 Mac 同步
+
+- **需求**：自訂字串經常改，希望沿用 Windows 無蝦米 `liu.box` 的模式——原始檔放 Dropbox，所有 Mac 的程式固定路徑以 symlink 指向它，不再為每個字串做 git commit／pull。
+- **架構**：`~/Dropbox/espanso/base.yml` 是唯一可編輯來源；Espanso live `match/base.yml` symlink 指向它。`projects.yml` 仍由各機依 `~/Projects/` 本機生成；`default.yml` 仍走 repo。
+- **背景重新載入**：新增 `reload_espanso_shared.py` 與一次性 `install_espanso_shared_mac.py`。LaunchAgent 監看 Dropbox 目錄並每 5 分鐘補查；內容雜湊變化時先用 `espanso match list` 驗證，再觸碰 live symlink，讓既有 GUI／launchd Espanso worker 自行 reload，不開 GUI、不搶焦點。
+- **踩坑**：Air 的舊 `Dropbox/設定檔` 被選擇性同步排除，建立同名目錄後 Dropbox 改名為「設定檔（選擇性同步衝突）」，導致 symlink 斷裂。因此 canonical 改用所有 Mac 都直接同步的 `Dropbox/espanso/base.yml`。初版背景程序直接 `espanso service restart` 亦逾時，改為 symlink mtime 通知，只有服務未執行時才由 launchd kickstart。
+- **驗證**：LaunchAgent `com.user.espanso-shared-reload` 多次背景事件均 last exit=0；Espanso service running；`espanso match list` 同時載入 `know; → knowledge-system` 與 `cdknow; → cd ~/Projects/knowledge-system`。舊 live 設定備份於 Espanso `backups/`。

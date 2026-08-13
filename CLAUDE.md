@@ -58,3 +58,17 @@ SRP / Information Hiding / OCP / No Silent Workaround(遇阻停下報告不繞�
 
 - **要更新**：工具引入了新的外部依賴(需要 `winget install` / `pip install` / 裝新 runtime)
 - **不用更新**：純用既有環境就能跑(Python 標準庫、已安裝的 npm 套件等) ^ck-d33d9c-8
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs are tracked in this repo's GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the five default canonical triage labels. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Use the single-context domain documentation layout. See `docs/agents/domain.md`.

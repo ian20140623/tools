@@ -13,7 +13,7 @@
 
 ## 階段目標
 
-- [x] A. espanso — 專案名稱快速輸入（Windows：無蝦米 liu.box；Mac：espanso match YAML 直接展開，gen_espanso_mac.py，2026-06-08）
+- [x] A. espanso — 專案名稱快速輸入（Windows：Dropbox `liu.box`；Mac：Dropbox `espanso/base.yml` 共用手動字串、live symlink、背景驗證 reload；`projects.yml` 每機生成。Air 已部署，2026-08-13）
 - [x] B. liu-updater — liu.box 時間字根自動更新（年度 + 季度，臨近2季度原則）
 - [ ] C. wifi-keepalive — iPhone 熱點 keep-alive + 斷線自動重連（PowerShell，僅 NB）
 - [ ] D. pinyin-drill — Mac 拼音練習遊戲（Python，Mac mini 本機，純英文輸入判定）
@@ -46,4 +46,4 @@
 
 ## 現況
 
-A、B、E、F、G 完成。C 建置中（腳本完成，待實測；NB 退役中可能重新定位）。D 開案中（Mac mini 本機小工具，跟其他專案無連動）。tools 基礎建設(README 規則、CLAUDE.md 流程、ROADMAP)已建立。liu.box 已備份進 repo。 ^ck-3c8342-5
+A、B、E、F、G 完成。Espanso 的 Mac 共用字串 canonical 已移到 Dropbox，Air 已部署；其他 Mac 只差各跑一次 installer。C 建置中（腳本完成，待實測；NB 退役中可能重新定位）。D 開案中（Mac mini 本機小工具，跟其他專案無連動）。tools 基礎建設（README 規則、CLAUDE.md 流程、ROADMAP）已建立。liu.box 已備份進 repo。 ^ck-3c8342-5

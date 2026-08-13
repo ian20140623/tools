@@ -11,7 +11,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
 
 matches:
-  # ── 自訂縮寫（跨機共用，走 symlink 同步；2026-06-18 Air 加 tmux/cd 系列）──
+  # Dropbox 架構的初次安裝 seed；日常修改請改 Dropbox/espanso/base.yml。
+  # ── 自訂縮寫（跨機共用；2026-06-18 Air 加 tmux/cd 系列）──
   - trigger: "cl;"
     replace: "claude"
 
@@ -39,6 +40,13 @@ matches:
   - trigger: "cdpj;"
     replace: "cd ~/Projects"
 
+  # knowledge-system 與 knowledge-system-warm-backup 的自動縮寫撞名，明確指定主 repo。
+  - trigger: "know;"
+    replace: "knowledge-system"
+
+  - trigger: "cdknow;"
+    replace: "cd ~/Projects/knowledge-system"
+
   - trigger: "obs;"
     replace: "Obsidian"
 
@@ -49,8 +57,6 @@ matches:
 
   # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
 
-  # But matches can also be dynamic:
-
   # Print the current date
   - trigger: ":date"
     replace: "{{mydate}}"
@@ -59,14 +65,5 @@ matches:
         type: date
         params:
           format: "%m/%d/%Y"
-
-  # Print the output of a shell command
-  - trigger: ":shell"
-    replace: "{{output}}"
-    vars:
-      - name: output
-        type: shell
-        params:
-          cmd: "echo 'Hello from your shell'"
 
   # And much more! For more information, visit the docs: https://espanso.org/docs/

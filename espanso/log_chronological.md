@@ -82,3 +82,14 @@
 - **跨機同步（本次新增、用戶要求「進repo」）**：espanso 不會自己跨機同步、設定原本沒走 Dropbox/git。新增 `mac-config/{match/base.yml, config/default.yml}` 進 repo、live 目錄改 symlink 指過去；`projects.yml` 維持各機 `gen_espanso_mac.py` 本機生成不進 repo（內容依本機資料夾而定）。espanso restart 透過 symlink 讀取正常。
 - **防覆蓋 gate（重要）**：repo 現存 base.yml 是 Mini 原廠空檔。Air 端 onboarding 時若 live base.yml 已有自訂縮寫，**必須先 cat 併進 repo 版再 symlink**，否則 Mini 空檔會覆蓋 Air 自訂。先 `git pull` 不動 live 檔（symlink 未建前 live 獨立）故安全。README 已記此 gate。
 - **待確認**：用戶 Air 上是否真有自訂 base.yml 內容（決定 repo base.yml 該以哪台為 source of truth）。 ^ck-mac-espanso-restore-1
+
+## 2026-08-13（四）
+
+### 12:10 [MAC-AIR] Dropbox 成為 Mac 共用字串 single source of truth
+
+- **架構**：常改的 `base.yml` 以 Dropbox `espanso/base.yml` 為 canonical；Espanso 固定位置 `~/Library/Application Support/espanso/match/base.yml` 改為 symlink。各機專案不同，`projects.yml` 仍由本機 generator 產生；`default.yml` 和安裝機制留在 tools repo。
+- **背景 reload**：安裝 `com.user.espanso-shared-reload` LaunchAgent，監看 Dropbox 目錄並每 5 分鐘補查。內容沒變只算 hash；有變先用 Espanso CLI 驗證，再碰 symlink 通知既有 watcher，不開 GUI、不搶焦點。
+- **安裝安全性**：先找 Dropbox 真實根目錄、確認 Espanso service 已註冊；首次安裝優先搬現有 live config，既有 Dropbox/live 不一致則停止要求人工合併。symlink、plist、runtime reloader 和新建 source 都有 rollback，重跑不重複備份。
+- **已知取捨**：symlink 代表 Dropbox 同步壞 YAML 時，檔案本身已立即出現在 live 路徑；validator 能避免主動 reload，但不能隔離該檔。靠安裝前 YAML 驗證、Dropbox 版本歷史和本機備份復原。此檔屬可執行設定，不放秘密，也不可開放他人寫入 Dropbox 資料夾。
+- **防撞名**：`gen_espanso_mac.py` 讀取 shared base triggers，從本機專案 triggers 排除同名項目；因此 `know;` / `cdknow;` 不會再被 `projects.yml` 蓋掉。
+- **Air 結果**：`know; → knowledge-system`、`cdknow; → cd ~/Projects/knowledge-system` 已生效；canonical 與 repo seed hash 一致，LaunchAgent 最近一次執行 exit 0。全程用背景 CLI 驗證，未做會搶焦點的 GUI 輸入測試。 ^ck-mac-espanso-dropbox-1

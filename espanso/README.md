@@ -61,7 +61,7 @@ Windows 用無蝦米接 liu.box；Mac 沒無蝦米，改讓 espanso 自己展開
 - `scripts/gen_espanso_mac.py` — 掃 `~/Projects/` 生成 espanso match YAML（重用 `gen_espanso.py` 的掃描 + trigger 邏輯，只換 output writer）
 - 輸出：`~/Library/Application Support/espanso/match/projects.yml`（獨立檔，不碰 `base.yml`）
 - trigger 形狀沿用 Windows：前 4 字母 + `;`（例 `know;` → `knowledge-system`）
-- 自訂字串（email、簽名等）加在 `base.yml`（已納入版控、見下方「跨機同步」），跑 `espanso edit` 編輯即可
+- 自訂字串（email、簽名等）加在 Dropbox 的 `espanso/base.yml`，所有 Mac 共用
 
 更新 triggers（新增專案資料夾後）：
 
@@ -82,25 +82,36 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.federicoterzi.espans
 ```
 enable 後 bootstrap exit=0、`espanso status` = running、`launchctl list | grep espanso` 看得到 PID。首裝完整流程：`open -a Espanso`（觸發輔助使用權限 wizard）→ 系統設定授權 → 上述 enable + bootstrap 註冊自啟。
 
-### Mac 跨機同步（symlink 進 repo）
+### Mac 跨機同步（Dropbox single source of truth）
 
-espanso **不會自己跨機同步**。為了兩台 Mac 共用一份自訂設定，把可攜的設定檔納入 repo、live 目錄用 symlink 指過去：
+所有 Mac 的手動自訂字串共用一份 Dropbox 原始檔：
 
-- `mac-config/match/base.yml` — 自訂縮寫（email / 簽名 / 個人 abbreviation），**跨機共用、進 repo**
-- `mac-config/config/default.yml` — 全域設定（toggle key / backend），**跨機共用、進 repo**
-- `match/projects.yml` — 專案 triggers，**不進 repo**：每台各自 `gen_espanso_mac.py` 生成（內容依本機 `~/Projects/` 資料夾而定）
+- `~/Dropbox/espanso/base.yml` — **唯一可編輯來源**；Dropbox 自動跨機同步
+- `~/Library/Application Support/espanso/match/base.yml` — symlink 指向上述 Dropbox 檔
+- `match/projects.yml` — 每台依本機 `~/Projects/` 生成，**不跨機同步**
+- `mac-config/config/default.yml` — 低頻全域設定，繼續走 repo
+- `mac-config/match/base.yml` — 初次安裝 seed／遷移期 fallback，不再是日常編輯來源
 
-live 目錄的 symlink（裝好後一次性建立）：
+每台 Mac 裝好 Espanso 後執行一次：
 
 ```bash
-REPO=~/Projects/tools/espanso/mac-config
-LIVE=~/Library/Application\ Support/espanso
-ln -sf "$REPO/match/base.yml"     "$LIVE/match/base.yml"
-ln -sf "$REPO/config/default.yml" "$LIVE/config/default.yml"
-espanso restart
+python3 ~/Projects/tools/espanso/scripts/install_espanso_shared_mac.py
 ```
 
-**⚠️ 新機器 onboarding gate（防覆蓋）**：若該機 live `base.yml` **已有自訂內容**，symlink 前先 `cat` 出來、把自訂縮寫**併進** repo 版再建 symlink，否則 symlink 會用 repo 版覆蓋掉本機自訂。先 `git pull` 不會動到 live 檔（symlink 尚未建立前 live 獨立），安全。
+安裝器會先確認 Dropbox 與 Espanso service 真實存在；首次建立 canonical 時優先沿用現有 live 字串。若 Dropbox 與本機設定內容不同，安裝器會停下要求人工合併，不會覆蓋任一側。通過後保留唯一備份、建立 symlink，並把背景程式安裝到穩定的 Application Support 路徑。
+
+背景 LaunchAgent 監看 Dropbox 目錄；內容雜湊改變時先用 `espanso match list` 驗證完整設定，成功且檔案在驗證期間未改變，才觸碰 live symlink，讓 Espanso 自己重新載入 worker。它不開 GUI、不搶焦點。File Provider 事件若被合併，另有每 5 分鐘一次的低成本補查。
+
+symlink 表示 Dropbox 檔案就是 live 設定：上述驗證能避免背景程序主動 reload 已知壞檔，但不能隔離 Dropbox 已同步的壞 YAML；Espanso 登入啟動時仍可能直接讀到它。Dropbox 的版本歷史與 Espanso `backups/` 是復原路徑。
+
+查看背景同步狀態：
+
+```bash
+launchctl print gui/$(id -u)/com.user.espanso-shared-reload
+tail -20 ~/Library/Logs/espanso-shared-reload.log
+```
+
+若 Dropbox 產生 conflicted copy，背景程序只讀固定名稱 `base.yml`，不自動合併衝突檔。這是可執行的可信設定（Espanso 支援 shell match）：Dropbox 帳號與此資料夾不得開放他人寫入，且密碼、token、私鑰不得放進共用字串檔。
 
 ### 依賴
 
