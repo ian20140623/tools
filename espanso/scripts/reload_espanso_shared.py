@@ -122,7 +122,17 @@ def reload_if_changed(source: Path, live: Path, *, force: bool = False) -> bool:
 
         espanso = espanso_binary()
         # Parses every active match file without relying on the running worker.
-        run_checked([espanso, "match", "list"])
+        # Some Macs deny launchd ancestry content access to Dropbox File
+        # Provider even though the GUI Espanso worker can read the same symlink.
+        # A real parse error remains fatal; only an I/O timeout degrades to the
+        # worker's own parser, and is always visible in the log.
+        try:
+            run_checked([espanso, "match", "list"])
+        except subprocess.TimeoutExpired:
+            log(
+                "WARNING: pre-validation unavailable in launchd context; "
+                "notifying the Espanso worker after metadata stability check"
+            )
         verified_fingerprint = file_fingerprint(source)
         if verified_fingerprint != fingerprint:
             raise RuntimeError("Dropbox source changed during validation; retrying next event")
