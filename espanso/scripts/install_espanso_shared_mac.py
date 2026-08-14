@@ -26,6 +26,7 @@ DEFAULT_LIVE = (
 )
 RUNTIME_DIR = Path.home() / "Library" / "Application Support" / "espanso-shared-reload"
 LAUNCH_AGENTS_DIR = Path.home() / "Library" / "LaunchAgents"
+VALIDATION_MODES = ("strict", "file-provider-degraded")
 
 
 def discover_dropbox_root() -> Path:
@@ -86,6 +87,19 @@ def file_digest(path: Path) -> str:
     return result.stdout.split(maxsplit=1)[0]
 
 
+def file_fingerprint(path: Path) -> str:
+    metadata = path.stat()
+    return ":".join(
+        str(value)
+        for value in (
+            metadata.st_dev,
+            metadata.st_ino,
+            metadata.st_size,
+            metadata.st_mtime_ns,
+        )
+    )
+
+
 def atomic_symlink(target: Path, link: Path) -> None:
     if target.absolute() == link.absolute():
         raise RuntimeError("source and live paths must be different")
@@ -105,18 +119,24 @@ def unique_backup(live: Path) -> Path | None:
     return backup
 
 
-def launch_agent_payload(source: Path, live: Path, installed_reloader: Path) -> dict:
+def launch_agent_payload(
+    source: Path,
+    live: Path,
+    installed_reloader: Path,
+    validation_mode: str,
+) -> dict:
     log_path = Path.home() / "Library" / "Logs" / "espanso-shared-reload.log"
-    python_executable = shutil.which("python3") or sys.executable
     return {
         "Label": LABEL,
         "ProgramArguments": [
-            python_executable,
+            sys.executable,
             str(installed_reloader),
             "--source",
             str(source),
             "--live",
             str(live),
+            "--validation-mode",
+            validation_mode,
         ],
         "RunAtLoad": True,
         "WatchPaths": [str(source.parent)],
@@ -144,6 +164,39 @@ def service_registered(label: str) -> bool:
     return result.returncode == 0
 
 
+def wait_for_agent_success(domain: str, *, timeout_seconds: float = 45) -> None:
+    deadline = time.monotonic() + timeout_seconds
+    last_output = ""
+    while time.monotonic() < deadline:
+        result = run_launchctl(["print", f"{domain}/{LABEL}"], check=False)
+        last_output = result.stdout
+        if result.returncode == 0:
+            state = next(
+                (
+                    line.split("=", 1)[1].strip()
+                    for line in result.stdout.splitlines()
+                    if line.strip().startswith("state =")
+                ),
+                None,
+            )
+            last_exit = next(
+                (
+                    line.split("=", 1)[1].strip()
+                    for line in result.stdout.splitlines()
+                    if line.strip().startswith("last exit code =")
+                ),
+                None,
+            )
+            if state == "not running" and last_exit == "0":
+                return
+            if state == "not running" and last_exit not in {None, "(never exited)"}:
+                raise RuntimeError(f"background reload agent exited with code {last_exit}")
+        time.sleep(0.25)
+    raise RuntimeError(
+        f"background reload agent did not complete within {timeout_seconds}s: {last_output.strip()}"
+    )
+
+
 def restore_path(path: Path, old_target: str | None, old_bytes: bytes | None) -> None:
     path.unlink(missing_ok=True)
     if old_target is not None:
@@ -152,7 +205,9 @@ def restore_path(path: Path, old_target: str | None, old_bytes: bytes | None) ->
         path.write_bytes(old_bytes)
 
 
-def install(source: Path, live: Path) -> None:
+def install(source: Path, live: Path, *, validation_mode: str = "strict") -> None:
+    if validation_mode not in VALIDATION_MODES:
+        raise ValueError(f"invalid validation mode: {validation_mode}")
     if not SEED_FILE.is_file() or not RELOADER.is_file():
         raise RuntimeError("installer assets are missing from the tools repo")
     if not service_registered(ESPANSO_LABEL):
@@ -176,12 +231,13 @@ def install(source: Path, live: Path) -> None:
             raise RuntimeError(
                 "existing Dropbox and live configs differ; merge them explicitly before installing"
             )
+    validation_fingerprint = file_fingerprint(source)
     try:
         validate_match_file(source)
     except subprocess.TimeoutExpired:
         if source_created:
             source.unlink(missing_ok=True)
-        if not already_linked:
+        if validation_mode != "file-provider-degraded" or not already_linked:
             raise RuntimeError(
                 "Dropbox source validation timed out; no installation changes were made"
             )
@@ -193,6 +249,10 @@ def install(source: Path, live: Path) -> None:
         if source_created:
             source.unlink(missing_ok=True)
         raise
+    if file_fingerprint(source) != validation_fingerprint:
+        if source_created:
+            source.unlink(missing_ok=True)
+        raise RuntimeError("Dropbox source changed during validation; no changes were installed")
 
     live.parent.mkdir(parents=True, exist_ok=True)
     backup = None if already_linked else unique_backup(live)
@@ -211,27 +271,58 @@ def install(source: Path, live: Path) -> None:
         plist_path.parent.mkdir(parents=True, exist_ok=True)
         plist_path.write_bytes(
             plistlib.dumps(
-                launch_agent_payload(source, live, installed_reloader),
+                launch_agent_payload(source, live, installed_reloader, validation_mode),
                 sort_keys=False,
             )
         )
         atomic_symlink(source, live)
         run_launchctl(["bootout", f"{domain}/{LABEL}"], check=False)
         run_launchctl(["bootstrap", domain, str(plist_path)], check=True)
-    except (OSError, subprocess.SubprocessError, RuntimeError):
-        restore_path(live, old_target, old_live_bytes)
+        wait_for_agent_success(domain)
+    except (OSError, subprocess.SubprocessError, RuntimeError) as error:
+        rollback_failures: list[str] = []
+
+        def rollback(label: str, operation) -> bool:
+            try:
+                operation()
+                return True
+            except (OSError, subprocess.SubprocessError, RuntimeError) as rollback_error:
+                rollback_failures.append(f"{label}: {rollback_error}")
+                return False
+
+        rollback(
+            "bootout new agent",
+            lambda: run_launchctl(["bootout", f"{domain}/{LABEL}"], check=False),
+        )
+        live_restored = rollback(
+            "restore live config",
+            lambda: restore_path(live, old_target, old_live_bytes),
+        )
         if old_plist is None:
-            plist_path.unlink(missing_ok=True)
+            rollback("remove new plist", lambda: plist_path.unlink(missing_ok=True))
         else:
-            plist_path.write_bytes(old_plist)
+            rollback("restore old plist", lambda: plist_path.write_bytes(old_plist))
         if old_reloader is None:
-            installed_reloader.unlink(missing_ok=True)
+            rollback("remove new reloader", lambda: installed_reloader.unlink(missing_ok=True))
         else:
-            installed_reloader.write_bytes(old_reloader)
+            rollback("restore old reloader", lambda: installed_reloader.write_bytes(old_reloader))
         if old_plist is not None:
-            run_launchctl(["bootstrap", domain, str(plist_path)], check=False)
+            rollback(
+                "bootstrap old agent",
+                lambda: run_launchctl(["bootstrap", domain, str(plist_path)], check=True),
+            )
         if source_created:
-            source.unlink(missing_ok=True)
+            if live_restored:
+                rollback("remove new Dropbox source", lambda: source.unlink(missing_ok=True))
+            else:
+                rollback_failures.append(
+                    f"preserved new Dropbox source for manual recovery: {source}"
+                )
+        if rollback_failures:
+            raise RuntimeError(
+                f"installation failed: {error}; rollback failures: "
+                + "; ".join(rollback_failures)
+            ) from error
         raise
 
     print(f"linked Espanso live config: {live} -> {source}")
@@ -244,6 +335,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path)
     parser.add_argument("--live", type=Path, default=DEFAULT_LIVE)
+    parser.add_argument("--validation-mode", choices=VALIDATION_MODES, default="strict")
     return parser.parse_args()
 
 
@@ -251,7 +343,7 @@ def main() -> int:
     args = parse_args()
     try:
         source = args.source.expanduser() if args.source else default_source()
-        install(source, args.live.expanduser())
+        install(source, args.live.expanduser(), validation_mode=args.validation_mode)
     except (RuntimeError, OSError, subprocess.SubprocessError, yaml.YAMLError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1

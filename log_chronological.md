@@ -269,3 +269,11 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - **驗證**：LaunchAgent `com.user.espanso-shared-reload` 多次背景事件均 last exit=0；Espanso service running；`espanso match list` 同時載入 `know; → knowledge-system` 與 `cdknow; → cd ~/Projects/knowledge-system`。舊 live 設定備份於 Espanso `backups/`。
 - **跨機部署補充**：prd01／dev01 於同日完成 installer 與 `projects.yml` 重生。dev01 實測 launchd ancestry 直接讀 Dropbox File Provider 內容可能永久卡在 `open()`，連 `shasum`／`espanso match list` 子程序也會 timeout；最終改用 metadata fingerprint 偵測與防 TOCTOU。parse error 仍拒絕 reload，只有 File Provider timeout 才寫 warning 並交給有 Dropbox 權限的 GUI worker 解析。
 - **installer 邊界**：YAML validation 與衝突比對也改為 20 秒可終止子程序；首次安裝遇 timeout 仍中止，只有既有 live symlink 的 idempotent runtime 更新可帶 warning 繼續，避免 File Provider 卡死阻斷修正版部署。
+
+## 2026-08-14（五）
+
+### 12:44 [NB] Espanso 跨機同步 final EES
+
+- **重跑原因**：跨機部署後的 File Provider 修正超出原 EES 範圍，因此針對 final working tree 重新走 Eagle Eye＋Spock，不能沿用舊綠燈。
+- **收斂設計**：validation 預設 strict；dev01 才明確宣告 `file-provider-degraded`。未驗證 fingerprint 記為 `degraded_pending` 並持續重試，不會被當成終態。installer 增加 validation TOCTOU、首次 job exit gate 與具依賴順序的 best-effort rollback。
+- **結果**：Eagle Eye 40/40 `ALL_TESTS_PASSED`；Spock 原 3 MUST＋1 SHOULD 全關閉，最終 `CLEAR 🖖`。測試全在 `/tmp`，未操作 GUI 或 live config。

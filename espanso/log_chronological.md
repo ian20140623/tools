@@ -100,3 +100,13 @@
 - **環境差異**：SSH 的精簡 PATH 會先選到 `/usr/bin/python3`；部署明確使用 `/opt/homebrew/bin/python3`。dev01 缺 PyYAML，依 PEP 668 建議安裝到 user site，未改 Homebrew 管理檔案。
 - **新 failure mode**：dev01 首次 background run 在 Python `open()` Dropbox File Provider 檔案時卡在 kernel 約 50 分鐘，LaunchAgent 無法結束；改成有 timeout 的 `shasum` 後雖能 fail-loud，但 launchd ancestry 仍每次無法讀內容（SSH shell 同時可讀，拿掉 Background QoS 也無效），連 `espanso match list` 都會 timeout。最終由 `stat` 的 device／inode／size／mtime fingerprint 判斷變更與 TOCTOU；CLI 快速 parse error 仍擋下，只有 File Provider timeout 才明確記 warning、交給已有 Dropbox 權限的 GUI worker 解析。helper 不再直接 open Dropbox bytes，也不靜默降級。 ^ck-mac-espanso-fileprovider-timeout-1
 - **installer 同類修正**：後續 idempotent 更新又證明 installer 自己的 YAML `read_text()` 也會卡死。validation 與首次衝突比對全移入有 20 秒 timeout 的子程序；首次安裝 timeout 仍 fail-closed 且 rollback，只有 live 已指向同一 canonical 時可帶 warning 繼續更新 runtime，避免修好的 reloader 反而無法部署。
+
+## 2026-08-14（五）
+
+### 12:44 [MAC-AIR] 最終 EES 收斂 File Provider 降級與 rollback
+
+- **為什麼重跑**：prd01／dev01 部署後新增多輪 File Provider 修正，先前 EES 已不能代表 final code；用戶追問後，重新跑完整 Eagle Eye＋Spock。
+- **安全邊界**：timeout 不再自動推論為 File Provider。預設 `strict` 一律 fail-closed；只有 dev01 安裝時明確指定 `--validation-mode file-provider-degraded` 才能 timeout 降級，該 capability 會寫進 LaunchAgent。
+- **狀態模型**：reload state 分 `validated`／`degraded_pending`。未驗證版本只通知一次、後續每 5 分鐘重試 validation，不重複 touch；驗證成功才升級終態。
+- **installer 強化**：validation 前後 fingerprint 防 TOCTOU；plist 固定使用本次已驗證的 `sys.executable`；bootstrap 後必須等首次 job `exit 0`。rollback 各步獨立 best-effort 並聚合錯誤；若 live restore 失敗，保留新建 Dropbox source 與完整 recovery path，避免 broken symlink 加資料遺失。
+- **EES 結果**：Eagle Eye 40/40（Happy 8、Edge 11、Error 16、Integration 5）`ALL_TESTS_PASSED`；Spock 關閉 3 項 MUST＋1 項 SHOULD，最終 `CLEAR 🖖`。全部 fixture 位於 `/tmp`，未碰 GUI、live Dropbox、LaunchAgent 或遠端主機。 ^ck-mac-espanso-final-ees-1
