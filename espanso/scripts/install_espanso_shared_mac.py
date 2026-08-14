@@ -25,6 +25,7 @@ DEFAULT_LIVE = (
     Path.home() / "Library" / "Application Support" / "espanso" / "match" / "base.yml"
 )
 RUNTIME_DIR = Path.home() / "Library" / "Application Support" / "espanso-shared-reload"
+LAUNCH_AGENTS_DIR = Path.home() / "Library" / "LaunchAgents"
 
 
 def discover_dropbox_root() -> Path:
@@ -52,9 +53,37 @@ def default_source() -> Path:
 
 
 def validate_match_file(path: Path) -> None:
-    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or not isinstance(payload.get("matches"), list):
-        raise RuntimeError(f"invalid Espanso match structure: {path}")
+    program = """
+import pathlib
+import sys
+import yaml
+
+path = pathlib.Path(sys.argv[1])
+payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+if not isinstance(payload, dict) or not isinstance(payload.get("matches"), list):
+    raise RuntimeError(f"invalid Espanso match structure: {path}")
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", program, str(path)],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    if result.returncode != 0:
+        detail = result.stderr.strip().splitlines()[-1] if result.stderr.strip() else "unknown error"
+        raise RuntimeError(f"invalid Espanso match file: {path}: {detail}")
+
+
+def file_digest(path: Path) -> str:
+    result = subprocess.run(
+        ["/usr/bin/shasum", "-a", "256", str(path)],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    return result.stdout.split(maxsplit=1)[0]
 
 
 def atomic_symlink(target: Path, link: Path) -> None:
@@ -133,6 +162,8 @@ def install(source: Path, live: Path) -> None:
     if source.absolute() == live.absolute():
         raise RuntimeError("source and live paths must be different")
 
+    already_linked = live.is_symlink() and live.exists() and live.resolve() == source.resolve()
+
     source.parent.mkdir(parents=True, exist_ok=True)
     source_created = False
     if not source.exists():
@@ -140,25 +171,35 @@ def install(source: Path, live: Path) -> None:
         shutil.copy2(seed, source)
         source_created = True
         print(f"created Dropbox canonical config from {seed}: {source}")
-    elif live.exists() and not (live.is_symlink() and live.resolve() == source.resolve()):
-        if live.read_bytes() != source.read_bytes():
+    elif live.exists() and not already_linked:
+        if file_digest(live.resolve()) != file_digest(source):
             raise RuntimeError(
                 "existing Dropbox and live configs differ; merge them explicitly before installing"
             )
     try:
         validate_match_file(source)
+    except subprocess.TimeoutExpired:
+        if source_created:
+            source.unlink(missing_ok=True)
+        if not already_linked:
+            raise RuntimeError(
+                "Dropbox source validation timed out; no installation changes were made"
+            )
+        print(
+            "WARNING: Dropbox validation unavailable in this launch context; "
+            "continuing idempotent runtime update for the existing live symlink"
+        )
     except (OSError, RuntimeError, yaml.YAMLError):
         if source_created:
             source.unlink(missing_ok=True)
         raise
 
     live.parent.mkdir(parents=True, exist_ok=True)
-    already_linked = live.is_symlink() and live.exists() and live.resolve() == source.resolve()
     backup = None if already_linked else unique_backup(live)
     old_target = os.readlink(live) if live.is_symlink() else None
     old_live_bytes = live.read_bytes() if live.exists() and not live.is_symlink() else None
 
-    plist_path = Path.home() / "Library" / "LaunchAgents" / f"{LABEL}.plist"
+    plist_path = LAUNCH_AGENTS_DIR / f"{LABEL}.plist"
     old_plist = plist_path.read_bytes() if plist_path.is_file() else None
     installed_reloader = RUNTIME_DIR / "reload_espanso_shared.py"
     old_reloader = installed_reloader.read_bytes() if installed_reloader.is_file() else None

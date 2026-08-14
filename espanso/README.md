@@ -98,7 +98,7 @@ enable 後 bootstrap exit=0、`espanso status` = running、`launchctl list | gre
 python3 ~/Projects/tools/espanso/scripts/install_espanso_shared_mac.py
 ```
 
-安裝器會先確認 Dropbox 與 Espanso service 真實存在；首次建立 canonical 時優先沿用現有 live 字串。若 Dropbox 與本機設定內容不同，安裝器會停下要求人工合併，不會覆蓋任一側。通過後保留唯一備份、建立 symlink，並把背景程式安裝到穩定的 Application Support 路徑。
+安裝器會先確認 Dropbox 與 Espanso service 真實存在；首次建立 canonical 時優先沿用現有 live 字串。若 Dropbox 與本機設定內容不同，安裝器會停下要求人工合併，不會覆蓋任一側。YAML 內容讀取放在有 20 秒 timeout 的子程序：首次安裝 timeout 必定中止；只有 live 已經指向同一 canonical 的 idempotent runtime 更新，才會帶 warning 繼續。通過後保留唯一備份、建立 symlink，並把背景程式安裝到穩定的 Application Support 路徑。
 
 背景 LaunchAgent 監看 Dropbox 目錄；檔案 metadata fingerprint（device／inode／size／mtime）改變時先用 `espanso match list` 驗證完整設定，成功且 fingerprint 在驗證期間未改變，才觸碰 live symlink，讓 Espanso 自己重新載入 worker。它不開 GUI、不搶焦點。helper 不直接開啟 Dropbox File Provider 的內容（dev01 實測 launchd ancestry 可能永久卡在 `open()`）。若 Espanso CLI 快速回報 YAML 錯誤，本輪仍拒絕 reload；只有 CLI 因相同 File Provider 限制 timeout 時，才明確記錄 warning，在 metadata 穩定檢查後交給已有 Dropbox 權限的 GUI worker 自行解析。File Provider 事件若被合併，另有每 5 分鐘一次的低成本補查。
 

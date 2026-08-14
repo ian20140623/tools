@@ -268,3 +268,4 @@ espanso 工具過去只在 Windows（NB/DESKTOP）跑，Mac 沒無蝦米接 liu.
 - **踩坑**：Air 的舊 `Dropbox/設定檔` 被選擇性同步排除，建立同名目錄後 Dropbox 改名為「設定檔（選擇性同步衝突）」，導致 symlink 斷裂。因此 canonical 改用所有 Mac 都直接同步的 `Dropbox/espanso/base.yml`。初版背景程序直接 `espanso service restart` 亦逾時，改為 symlink mtime 通知，只有服務未執行時才由 launchd kickstart。
 - **驗證**：LaunchAgent `com.user.espanso-shared-reload` 多次背景事件均 last exit=0；Espanso service running；`espanso match list` 同時載入 `know; → knowledge-system` 與 `cdknow; → cd ~/Projects/knowledge-system`。舊 live 設定備份於 Espanso `backups/`。
 - **跨機部署補充**：prd01／dev01 於同日完成 installer 與 `projects.yml` 重生。dev01 實測 launchd ancestry 直接讀 Dropbox File Provider 內容可能永久卡在 `open()`，連 `shasum`／`espanso match list` 子程序也會 timeout；最終改用 metadata fingerprint 偵測與防 TOCTOU。parse error 仍拒絕 reload，只有 File Provider timeout 才寫 warning 並交給有 Dropbox 權限的 GUI worker 解析。
+- **installer 邊界**：YAML validation 與衝突比對也改為 20 秒可終止子程序；首次安裝遇 timeout 仍中止，只有既有 live symlink 的 idempotent runtime 更新可帶 warning 繼續，避免 File Provider 卡死阻斷修正版部署。
